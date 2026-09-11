@@ -1,106 +1,191 @@
 ---
 name: tpi-test
-description: Test a GitHub TPI issue against the latest VS Code Insiders build using Playwright observation and debugger attachment.
+description: "Test a GitHub TPI issue against the latest VS Code Insiders build. Use when given a GitHub issue URL that contains manual test-plan items requiring Playwright workbench observation, screenshots, console evidence, or extension-host debugging."
 ---
 
-You need a test plan item as input. The test plan item comes as a link to a github issue.
+# TPI Test
 
-Remember the issue number in env variable `TPI_ISSUE_NUMBER`.
+The required input is a GitHub issue URL containing one or more test-plan items. Do not infer an issue from repository state or begin testing without this URL.
 
-## setup latest code insiders
+## Phase 1: Read the Issue
 
-Run `code-insiders --version` and verify that this is the latest insiders version.
+1. Validate that the input is a GitHub issue URL and extract its owner, repository, and numeric issue number.
+2. Set the issue number for the current PowerShell session:
 
-On Windows:
+	 ```powershell
+	 $env:TPI_ISSUE_NUMBER = '<issue-number>'
+	 ```
 
-Use `(Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/win32-x64-user/insider/latest').productVersion` to get the latest insiders version.
+3. Fetch the issue title, body, and relevant comments with an available GitHub tool or the GitHub API. If the issue is private and cannot be read, ask the user to authenticate through the available GitHub integration; never request or print a token.
+4. Identify each explicit test item, its expected behavior, prerequisites, and any platform or configuration constraints. Preserve the source issue URL in the test plan.
+5. Build enough feature context to design tests beyond the literal TPI steps. Research relevant release notes, official documentation, linked issues or pull requests, source code, existing tests, settings, commands, and related behavior. Prefer primary sources and record the links or repository paths used. Do not treat assumptions or third-party descriptions as product requirements.
+6. From the issue and research, identify the feature's user goal, supported variations, state transitions, integration points, likely failure modes, and areas affected by the change. Clearly distinguish documented behavior from exploratory hypotheses.
 
-Run `winget upgrade --id Microsoft.VisualStudioCode.Insiders --force` to upgrade to the latest insiders version if required.
+## Phase 2: Prepare the Environment
 
+### Verify VS Code Insiders
 
-### set up a workspace
-
-create a new folder for the workspace in this workspace:
-
-`./$env:TPI_ISSUE_NUMBER/workspace`
-
-## launch an observable and debuggable VS Code Insiders 
-
-Then launch an isolated VS Code Insiders instance with renderer and extension-host debugging enabled:
-
-```powershell
-code-insiders `
-	--user-data-dir ".\$env:TPI_ISSUE_NUMBER\user-data-dir" `
-	--extensions-dir ".\$env:TPI_ISSUE_NUMBER\extensions-dir" `
-	--remote-debugging-port=9222 `
-	--inspect-extensions=9333 `
-  .\$env:TPI_ISSUE_NUMBER\workspace
-```
-
-Using an isolated user-data directory prevents an existing VS Code process from absorbing the launch arguments. Verify the renderer endpoint before continuing:
+On Windows, compare the installed version with the latest published version:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:9222/json/version
+$installedVersion = (code-insiders --version | Select-Object -First 1).Trim()
+$latestVersion = (Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/win32-x64-user/insider/latest').productVersion
+$installedVersion
+$latestVersion
 ```
 
-Ensure this project has Playwright available:
+If the versions differ, run:
+
+```powershell
+winget upgrade --id Microsoft.VisualStudioCode.Insiders --exact --force --accept-source-agreements --accept-package-agreements
+```
+
+Run both version checks again after the upgrade. If `code-insiders`, `winget`, or the update API is unavailable, or the versions still differ, stop and report the blocker instead of claiming that the latest build was tested.
+
+### Create Isolated Directories
+
+Create these directories beneath the current workspace without deleting existing evidence:
+
+```text
+<issue-number>/
+	workspace/
+	user-data-dir/
+	extensions-dir/
+	tests/
+```
+
+Reuse an existing issue directory only when continuing the same test run. Otherwise, ask before overwriting files from an earlier run.
+
+### Reserve Debug Ports
+
+Use renderer port `9222` and extension-host port `9333` by default. Before launch, verify that neither port is already listening:
+
+```powershell
+Get-NetTCPConnection -State Listen -LocalPort 9222,9333 -ErrorAction SilentlyContinue
+```
+
+If either port is occupied, do not attach to it blindly. Select unused local ports, update all later commands consistently, and set `VSCODE_CDP_ENDPOINT` to the selected renderer endpoint. Keep the endpoints on `127.0.0.1`; debugger access permits control of the corresponding process and must not be exposed to an untrusted network.
+
+### Install Playwright
+
+If Playwright is not already declared in this project's `package.json`, install it:
 
 ```powershell
 npm install --save-dev playwright
 ```
 
-Set `PWDEBUG` and run the observer script bundled with this skill:
+## Phase 3: Write the Plan and Stop for Approval
+
+Design a focused set of tests rather than mechanically copying the issue steps. The approved plan must fully cover every explicit TPI requirement and also include relevant exploratory testing of the feature. Consider these dimensions and include the ones that could reveal meaningful defects:
+
+- primary workflow and expected successful outcome;
+- meaningful input, file-type, language, setting, or configuration variations;
+- boundary, empty, invalid, unavailable, cancellation, and recovery behavior;
+- repeated use, state persistence, reload, restart, and workspace transitions;
+- interaction with adjacent commands, views, keybindings, extensions, or platform behavior;
+- keyboard operation, focus, accessibility labels, and visible feedback for UI features;
+- likely regression paths identified from linked changes, source code, or existing tests.
+
+Do not add variations only to inflate the test count. Prioritize cases by user impact, likelihood of failure, and the change's implementation risk. Keep exploratory work bounded with a clear charter, evidence to collect, and stopping condition. If research does not establish an expected result, label the case as exploratory and describe the behavior being investigated rather than inventing a requirement.
+
+Create `<issue-number>/test-plan.md` before performing any test item. The plan must contain:
+
+- the source issue URL and extracted test items;
+- a concise feature summary and links or repository paths for research sources;
+- a coverage matrix mapping every explicit TPI requirement to one or more planned tests;
+- each test's origin, labeled `TPI` or `Exploratory`, and its priority;
+- the installed and latest Insiders versions;
+- prerequisites, setup files, settings, and extensions;
+- numbered actions and expected results for every test item;
+- exploratory charters, hypotheses, time or scope bounds, and stopping conditions;
+- the Playwright observations, screenshots, browser console messages, VS Code log files, or debugger evidence to capture;
+- cleanup steps and any known risks.
+
+Present the plan to the user and explicitly ask for approval. **Stop here. Do not launch the test instance, create test fixtures, install test-specific extensions, or execute any test item until the user approves the plan.** Environment inspection, version upgrade, directory creation, and Playwright installation may occur before approval.
+
+## Phase 4: Launch VS Code Insiders
+
+After approval, launch a new isolated VS Code Insiders window with the selected ports:
 
 ```powershell
-$env:PWDEBUG = '1'
-node .copilot/skills/tpi-test/observe-vscode.js
+code-insiders `
+	--new-window `
+	--user-data-dir ".\$env:TPI_ISSUE_NUMBER\user-data-dir" `
+	--extensions-dir ".\$env:TPI_ISSUE_NUMBER\extensions-dir" `
+	--remote-debugging-address=127.0.0.1 `
+	--remote-debugging-port=9222 `
+	--inspect-extensions=9333 `
+	".\$env:TPI_ISSUE_NUMBER\workspace"
 ```
 
-The script connects to the VS Code renderer over CDP, prints the discovered pages, selects the workbench, and opens Playwright Inspector. Use accessibility roles, labels, and stable `data-*` attributes instead of deeply nested CSS selectors.
-
-### connect an agent to the debug ports
-
-
-Discover the renderer and extension-host targets before attaching:
+When alternate ports were selected, substitute them in this command and all commands below. Confirm that the endpoints belong to the newly launched isolated instance:
 
 ```powershell
+Invoke-RestMethod http://127.0.0.1:9222/json/version
 Invoke-RestMethod http://127.0.0.1:9222/json/list |
 	Select-Object title, url, webSocketDebuggerUrl
-
 Invoke-RestMethod http://127.0.0.1:9333/json/list |
 	Select-Object title, type, webSocketDebuggerUrl
 ```
 
-For renderer observation and UI interaction, connect Playwright to `http://127.0.0.1:9222` with `chromium.connectOverCDP`. The bundled `observe-vscode.js` demonstrates this connection. For unattended agent testing, use a task-specific Playwright script without `page.pause()` and capture relevant text, console messages, screenshots, and errors as test evidence.
+Open the About dialog in the isolated workbench and record its displayed version and commit. Confirm that they agree with the command-line version before testing.
 
-For extension-host source debugging, an agent can attach Node's command-line inspector:
+## Phase 5: Observe and Execute
+
+### Interactive Observation
+
+Use the bundled observer only when a human will work with Playwright Inspector:
+
+```powershell
+$env:PWDEBUG = '1'
+$env:VSCODE_CDP_ENDPOINT = 'http://127.0.0.1:9222'
+node .copilot/skills/tpi-test/observe-vscode.js
+```
+
+The observer connects over CDP, prints discovered pages, selects the workbench, and pauses in Playwright Inspector. It is not an unattended test runner.
+
+### Unattended Execution
+
+For agent-driven execution, create a test-specific Playwright script under `<issue-number>/tests/<test-item-name>/` that connects with `chromium.connectOverCDP`. Do not call `page.pause()` or `workbench.pause()` in an unattended script. Use accessibility roles, labels, and stable `data-*` attributes instead of deeply nested CSS selectors.
+
+Capture the evidence required by the approved plan, including relevant workbench text, screenshots, browser console messages, page errors, and failed requests. Also inspect the VS Code logs written by the isolated instance under `<issue-number>/user-data-dir/logs`. Identify the directory for the current VS Code session and preserve relevant files or excerpts, such as window, renderer, extension-host, shared-process, and extension-specific logs. Keep their relative source paths so the producing process is clear. Do not include unrelated log content, credentials, tokens, or other sensitive values in test artifacts.
+
+Use the extension-host debugger only when the test requires source-level evidence:
 
 ```powershell
 node inspect 127.0.0.1:9333
 ```
 
-Use a Node Inspector Protocol client when the agent needs programmatic breakpoints, stack frames, console events, or expression evaluation. Launch with `--inspect-brk-extensions=9333` instead of `--inspect-extensions=9333` when extension activation must pause until the client attaches.
+For programmatic breakpoints, stack frames, console events, or expression evaluation, use a Node Inspector Protocol client. Relaunch with `--inspect-brk-extensions=9333` only when extension activation must pause before running.
 
-Keep both debug ports bound to `127.0.0.1`. Do not expose them to an untrusted network because an attached client can control the corresponding process.
+Execute test items in the approved order. Create required fixtures only under `<issue-number>/workspace` unless the approved plan specifies otherwise. Do not silently change the plan while testing; record deviations and ask for approval when they materially alter scope or expected behavior.
 
----
+## Phase 6: Record Results
 
-Once the agent is connected and the workspace is set up, open the About dialog and verify the VS Code version.
+Store each test item's evidence using this layout:
 
+```text
+<issue-number>/tests/<test-item-name>/
+	test.md
+	screenshots/
+	vscode-logs/
+	console.log
+	test-script.js
+```
 
-Proceed with executing the test plan items while observing the workbench. 
+Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and `test-script.js` are optional. Copy only the relevant VS Code logs or excerpts from `<issue-number>/user-data-dir/logs`, preserving enough of their source directory structure to identify the session and process. Each `test.md` must record:
 
-Come up with a plan at .\$env:TPI_ISSUE_NUMBER\test-plan.md.
+- source issue URL and test-item name;
+- origin: `TPI` or `Exploratory`;
+- research sources or hypotheses relevant to the expected behavior;
+- status: `Passed`, `Failed`, or `Blocked`;
+- tested Insiders version and commit;
+- environment and prerequisites;
+- steps performed;
+- expected result;
+- actual result;
+- relevant browser console, VS Code log, or debugger output, including the original VS Code log path;
+- deviations from the approved plan;
+- workspace-relative links to screenshots and other evidence.
 
-Now, execute the testing according to the plan you have devised.
-Ask the user to review the plan before executing the test items.
-
-Then execute the test items as per the plan.
-
-- create files in the workspace that are needed to execute the test plan items
-- execute the test items as per the plan.   
-- record the results for each test plan item in a test.md file for each test item under .\$env:TPI_ISSUE_NUMBER\tests\<test-item-name>.md:
-  - Record the tested Insiders version, steps performed, expected result, actual result, and relevant console or debugger output.
-  - Include any relevant screenshots and links to them.
-
-If this SKILL.md file needs improvement, update it with clearer instructions, additional context, or corrections as necessary.
+Finish with a concise summary in `<issue-number>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
