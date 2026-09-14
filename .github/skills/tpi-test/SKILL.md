@@ -5,7 +5,13 @@ description: "Test a GitHub TPI issue against the latest VS Code Insiders build.
 
 # TPI Test
 
-The required input is a GitHub issue URL containing one or more test-plan items. Do not infer an issue from repository state or begin testing without this URL.
+The required input is
+- a GitHub issue URL that describes what to test in VS Code
+- a textual description of the test scenario.
+
+If you get a textual description of the test scenario, the create a issue in this repository (https://github.com/aeschli/agent-testing). Check with the user before proceeding to ensure that the issue accurately reflects the intended test scenario.
+
+If no textual description is provided, ask the user to supply one before proceeding.
 
 ## Phase 1: Read the Issue
 
@@ -13,7 +19,7 @@ The required input is a GitHub issue URL containing one or more test-plan items.
 2. Set the issue number for the current PowerShell session:
 
 	 ```powershell
-	 $env:TPI_ISSUE_NUMBER = '<issue-number>'
+	 $env:TPI_ID = '<repo-name>-<TPI_ID>'
 	 ```
 
 3. Fetch the issue title, body, and relevant comments with an available GitHub tool or the GitHub API. If the issue is private and cannot be read, ask the user to authenticate through the available GitHub integration; never request or print a token.
@@ -47,7 +53,7 @@ Run both version checks again after the upgrade. If `code-insiders`, `winget`, o
 Create these directories beneath the current workspace without deleting existing evidence:
 
 ```text
-<issue-number>/
+<$env:TPI_ID>/
 	workspace/
 	user-data-dir/
 	extensions-dir/
@@ -88,7 +94,7 @@ Design a focused set of tests rather than mechanically copying the issue steps. 
 
 Do not add variations only to inflate the test count. Prioritize cases by user impact, likelihood of failure, and the change's implementation risk. Keep exploratory work bounded with a clear charter, evidence to collect, and stopping condition. If research does not establish an expected result, label the case as exploratory and describe the behavior being investigated rather than inventing a requirement.
 
-Create `<issue-number>/test-plan.md` before performing any test item. The plan must contain:
+Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan must contain:
 
 - the source issue URL and extracted test items;
 - a concise feature summary and links or repository paths for research sources;
@@ -129,12 +135,12 @@ VS Code Insiders window with the selected ports:
 ```powershell
 code-insiders `
 	--new-window `
-	--user-data-dir ".\$env:TPI_ISSUE_NUMBER\user-data-dir" `
-	--extensions-dir ".\$env:TPI_ISSUE_NUMBER\extensions-dir" `
+	--user-data-dir ".\$env:TPI_ID\user-data-dir" `
+	--extensions-dir ".\$env:TPI_ID\extensions-dir" `
 	--remote-debugging-address=127.0.0.1 `
 	--remote-debugging-port=9222 `
 	--inspect-extensions=9333 `
-	".\$env:TPI_ISSUE_NUMBER\workspace"
+	".\$env:TPI_ID\workspace"
 ```
 
 When alternate ports were selected, substitute them in this command and all commands below. Confirm that the endpoints belong to the newly launched isolated instance:
@@ -182,9 +188,9 @@ The observer connects over CDP, prints discovered pages, selects the workbench, 
 
 ### Unattended Execution
 
-For agent-driven execution, create a test-specific Playwright script under `<issue-number>/tests/<test-item-name>/` that connects with `chromium.connectOverCDP`. Do not call `page.pause()` or `workbench.pause()` in an unattended script. Use accessibility roles, labels, and stable `data-*` attributes instead of deeply nested CSS selectors.
+For agent-driven execution, create a test-specific Playwright script under `<TPI_ID>/tests/<test-item-name>/` that connects with `chromium.connectOverCDP`. Do not call `page.pause()` or `workbench.pause()` in an unattended script. Use accessibility roles, labels, and stable `data-*` attributes instead of deeply nested CSS selectors.
 
-Capture the evidence required by the approved plan, including relevant workbench text, screenshots, browser console messages, page errors, and failed requests. Also inspect the VS Code logs written by the isolated instance under `<issue-number>/user-data-dir/logs`. Identify the directory for the current VS Code session and preserve relevant files or excerpts, such as window, renderer, extension-host, shared-process, and extension-specific logs. Keep their relative source paths so the producing process is clear. Do not include unrelated log content, credentials, tokens, or other sensitive values in test artifacts.
+Capture the evidence required by the approved plan, including relevant workbench text, screenshots, browser console messages, page errors, and failed requests. Also inspect the VS Code logs written by the isolated instance under `<TPI_ID>/user-data-dir/logs`. Identify the directory for the current VS Code session and preserve relevant files or excerpts, such as window, renderer, extension-host, shared-process, and extension-specific logs. Keep their relative source paths so the producing process is clear. Do not include unrelated log content, credentials, tokens, or other sensitive values in test artifacts.
 
 Use the extension-host debugger only when the test requires source-level evidence:
 
@@ -194,14 +200,14 @@ node inspect 127.0.0.1:9333
 
 For programmatic breakpoints, stack frames, console events, or expression evaluation, use a Node Inspector Protocol client. Relaunch with `--inspect-brk-extensions=9333` only when extension activation must pause before running.
 
-Execute test items in the approved order. Create required fixtures only under `<issue-number>/workspace` unless the approved plan specifies otherwise. Do not silently change the plan while testing; record deviations and ask for approval when they materially alter scope or expected behavior.
+Execute test items in the approved order. Create required fixtures only under `<TPI_ID>/workspace` unless the approved plan specifies otherwise. Do not silently change the plan while testing; record deviations and ask for approval when they materially alter scope or expected behavior.
 
 ## Phase 6: Record Results
 
 Store each test item's evidence using this layout:
 
 ```text
-<issue-number>/tests/<test-item-name>/
+<TPI_ID>/tests/<test-item-name>/
 	test.md
 	screenshots/
 	vscode-logs/
@@ -209,7 +215,7 @@ Store each test item's evidence using this layout:
 	test-script.js
 ```
 
-Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and `test-script.js` are optional. Copy only the relevant VS Code logs or excerpts from `<issue-number>/user-data-dir/logs`, preserving enough of their source directory structure to identify the session and process. Each `test.md` must record:
+Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and `test-script.js` are optional. Copy only the relevant VS Code logs or excerpts from `<TPI_ID>/user-data-dir/logs`, preserving enough of their source directory structure to identify the session and process. Each `test.md` must record:
 
 - source issue URL and test-item name;
 - origin: `TPI` or `Exploratory`;
@@ -224,4 +230,4 @@ Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and 
 - deviations from the approved plan;
 - workspace-relative links to screenshots and other evidence.
 
-Finish with a concise summary in `<issue-number>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
+Finish with a concise summary in `<TPI_ID>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
