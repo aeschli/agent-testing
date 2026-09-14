@@ -105,7 +105,26 @@ Present the plan to the user and explicitly ask for approval. **Stop here. Do no
 
 ## Phase 4: Launch VS Code Insiders
 
-After approval, launch a new isolated VS Code Insiders window with the selected ports:
+After approval, configure the isolated profile to open directly on the test
+workspace rather than showing the Welcome editor:
+
+```json
+{
+	"workbench.startupEditor": "none",
+	"window.dialogStyle": "custom"
+}
+```
+
+Merge this setting with any test-specific settings instead of replacing them.
+Custom dialogs keep supported confirmations and information dialogs within the
+workbench renderer so Playwright can observe and capture them.
+Before launching, check whether the selected renderer endpoint already belongs
+to an instance using this issue's `user-data-dir`. Reuse that instance rather
+than launching a second window. Do not close or modify unrelated VS Code
+windows.
+
+When there is no existing instance for this issue, launch exactly one isolated
+VS Code Insiders window with the selected ports:
 
 ```powershell
 code-insiders `
@@ -128,7 +147,24 @@ Invoke-RestMethod http://127.0.0.1:9333/json/list |
 	Select-Object title, type, webSocketDebuggerUrl
 ```
 
-Open the About dialog in the isolated workbench and record its displayed version and commit. Confirm that they agree with the command-line version before testing.
+Verify that the renderer endpoint exposes exactly one workbench page and that
+its title is the test workspace. If it exposes multiple workbench pages, stop
+and close only surplus windows belonging to this issue's isolated
+`user-data-dir`; never close unrelated VS Code windows. Trust the test
+workspace and dismiss first-run sign-in or onboarding dialogs before capturing
+test evidence. If authentication is required for the test, ask the user to
+complete it rather than selecting a signed-out path.
+
+Record the tested version and commit from `code-insiders --version`. Also
+confirm that the isolated workbench URL contains the same commit. Open
+**About** and confirm that it agrees with the command-line version. If the
+platform ignores the custom-dialog setting and renders **About** outside
+Playwright's automation surface, record that limitation and use the CLI and
+workbench URL checks; do not use system-wide keystroke or window automation
+solely to inspect it.
+
+
+Now ask the user to sign in with GitHub in VS Code Insiders before proceeding to Phase 5.
 
 ## Phase 5: Observe and Execute
 

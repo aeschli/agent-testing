@@ -1,0 +1,25 @@
+Workbench title: workspace - Visual Studio Code - Insiders
+Workbench URL commit: 7b7e49c83affacfac726040280da69b4999f3e01
+
+Initial accessibility state:
+- MCP Servers, 3 items
+- leave-me, Running
+- migrate-me, Running
+- uses-workspace-variable, Error
+- Migrations, 0 customizations need attention
+- Your migration checklist: 2 of 2 complete
+- workspace Migrated: No remaining migrations
+
+Retry accessibility state after restarting the isolated instance:
+- Migrations, 2 customizations need attention
+- MCP Servers, 2 servers
+- Migrate MCP Servers
+- Select leave-me from .vscode\mcp.json (checked)
+- leave-me .vscode\mcp.json to .mcp.json
+- Select migrate-me from .vscode\mcp.json (checked)
+- migrate-me .vscode\mcp.json to .mcp.json
+- 2 selected
+- Migrate 2
+
+The unsupported uses-workspace-variable entry was not present in the migration
+candidate list. Keyboard Space toggled the leave-me checkbox off and back on.

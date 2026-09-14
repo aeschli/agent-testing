@@ -1,0 +1,25 @@
+{
+  // This comment should remain after migration.
+  "servers": {
+    "migrate-me": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ]
+    },
+    "leave-me": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ]
+    },
+    "uses-workspace-variable": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/server.js"
+    }
+  }
+}
