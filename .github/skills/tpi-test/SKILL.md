@@ -40,21 +40,8 @@ checks the Insiders channel before launch and reuses the cached build when it
 is current. If the download or version resolution fails, stop and report the
 blocker instead of falling back to an installed or stable build.
 
-### Create an Authenticated Source Profile for VS Code Insiders
-
-Create or refresh that authenticated source profile before using the test
-launcher:
-
-```powershell
-npm run setup-authenticated-user-data
-```
-
-In the window that opens:
-
-1. Sign in to GitHub from the Accounts menu and complete the browser flow.
-2. Confirm that the Accounts menu shows the expected GitHub account.
-3. Close that Insiders window so its storage databases are flushed and no
-   source files remain locked.
+If the authentication source directories do not exist, the test launcher opens
+an Insiders profile for GitHub sign-in and resumes after that window closes.
 
 ### Create Isolated Directories
 
@@ -101,7 +88,11 @@ Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan mu
 
 Present the plan to the user and explicitly ask for approval. **Stop here. Do not launch the test instance, create test fixtures, install test-specific extensions, or execute any test item until the user approves the plan.** Environment inspection, version upgrade, directory creation, and Playwright installation may occur before approval.
 
-## Phase 4: Launch VS Code Insiders for testing
+## Phase 4: Testing
+
+Run the following steps in a subagent in the background. From time to time check the progress and ensure that no errors have occurred.
+
+### Launch Isolated TPI Instance
 
 Then launch the isolated TPI instance:
 
@@ -117,21 +108,15 @@ evidence. Confirm that the cloned profile is signed in before continuing.
 If the source session has expired, ask the user to refresh it in the source
 profile rather than signing into the isolated test profile.
 
-## Phase 5: Observe and Execute
+### Observe and Execute
 
 Follow [Observe and execute VS Code with Playwright](./observe-and-execute.md)
 for interactive observation, unattended execution, and evidence capture.
 These instructions are required for every test item.
 
-When an approved test requires source-level evidence, also follow
-[Observe and debug VS Code](./observe-and-debug.md) for extension-host
-debugging.
-
-## Phase 5: Perform Tests
+## Run and Record Results
 
 Execute each test item according to the approved plan. Record observations, capture evidence, and note any deviations from the expected behavior. Ensure that all steps are followed precisely to maintain the integrity of the test results.
-
-## Phase 6: Record Results
 
 Store each test item's evidence using this layout:
 
@@ -160,11 +145,11 @@ Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and 
 - deviations from the approved plan;
 - workspace-relative links to screenshots and other evidence.
 - store issue to report in `reported-issues/`
-- store the chat session log in `chat-session-log/
+- store the chat session log in `chat-session-log/`
 
 Finish with a concise summary in `<TPI_ID>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
 
-## Phase 7: Reflect on test run
+## Phase 5: Reflect and Improve
 
 In this phase, consider what went well and what could be improved in the testing process.
 - If some steps were difficult to perform in VS Code, note the specific challenges and any workarounds used. Suggest improvements to VS Code such as UI enhancements, better documentation, or additional automation support.

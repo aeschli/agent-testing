@@ -45,18 +45,17 @@ async function main(): Promise<void> {
 	console.log('Opening the authenticated VS Code Insiders profile:');
 	console.log(`  User data:   ${options.userDataDir}`);
 	console.log(`  Shared data: ${sharedDataDir}`);
-
-	await launchCodeInsiders([
-		'--user-data-dir', options.userDataDir,
-		'--shared-data-dir', sharedDataDir,
-		'--new-window',
-	]);
-
 	console.log(`
 In the opened window:
 1. Sign in to GitHub from the Accounts menu.
 2. Confirm that the expected GitHub account is shown.
 3. Close the window to flush and unlock its storage databases.`);
+
+	await launchCodeInsiders([
+		'--user-data-dir', options.userDataDir,
+		'--shared-data-dir', sharedDataDir,
+		'--new-window',
+	], { waitForExit: true });
 }
 
 main().catch(error => {

@@ -9,6 +9,11 @@ export const defaultAuthenticatedUserDataDir = join(homedir(), 'authenticated-us
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const cachePath = resolve(scriptDir, '..', '..', '..', '.vscode-test');
 
+interface LaunchCodeOptions {
+	beforeSpawn?: () => Promise<void>;
+	waitForExit?: boolean;
+}
+
 export function downloadLatestVSCodeInsiders(): Promise<string> {
 	return downloadAndUnzipVSCode({
 		version: 'insiders',
@@ -18,21 +23,37 @@ export function downloadLatestVSCodeInsiders(): Promise<string> {
 
 export async function launchCodeInsiders(
 	args: string[],
-	beforeSpawn?: () => Promise<void>,
+	options: LaunchCodeOptions = {},
 ): Promise<void> {
 	const executable = await downloadLatestVSCodeInsiders();
-	await beforeSpawn?.();
+	await options.beforeSpawn?.();
+	const waitForExit = options.waitForExit ?? false;
 	const child = spawn(executable, args, {
-		detached: true,
+		detached: !waitForExit,
 		stdio: 'ignore',
 		windowsHide: false,
 	});
 
 	await new Promise<void>((resolveLaunch, rejectLaunch) => {
-		child.once('spawn', resolveLaunch);
 		child.once('error', rejectLaunch);
+		child.once('spawn', () => {
+			if (!waitForExit) {
+				child.unref();
+				resolveLaunch();
+			}
+		});
+		if (waitForExit) {
+			child.once('close', (code, signal) => {
+				if (code === 0) {
+					resolveLaunch();
+					return;
+				}
+				rejectLaunch(new Error(
+					`VS Code Insiders exited with ${signal ? `signal ${signal}` : `code ${code}`}.`,
+				));
+			});
+		}
 	});
-	child.unref();
 }
 
 export function readOption(

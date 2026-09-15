@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { createServer, type Server } from 'node:net';
 import { homedir } from 'node:os';
@@ -243,8 +244,15 @@ function copyMissingAuthenticationSeed(
 	source: string,
 	destination: string,
 	requiredPaths: string[],
-): void {
-	assertPathExists(source, 'Authentication source directory');
+): boolean {
+	try {
+		statSync(source);
+	} catch (error) {
+		if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+			return false;
+		}
+		throw error;
+	}
 
 	for (const relativePath of requiredPaths) {
 		const sourcePath = join(source, relativePath);
@@ -257,6 +265,34 @@ function copyMissingAuthenticationSeed(
 		mkdirSync(dirname(destinationPath), { recursive: true });
 		cpSync(sourcePath, destinationPath, { recursive: true, force: true });
 	}
+	return true;
+}
+
+async function setupAuthenticationSource(
+	scriptDir: string,
+	sourceUserDataDir: string,
+	sourceSharedDataDir: string,
+): Promise<void> {
+	const child = spawn(process.execPath, [
+		join(scriptDir, 'setup-authenticated-user-data.mts'),
+		'--user-data-dir', sourceUserDataDir,
+		'--shared-data-dir', sourceSharedDataDir,
+	], {
+		stdio: 'inherit',
+	});
+
+	await new Promise<void>((resolveSetup, rejectSetup) => {
+		child.once('error', rejectSetup);
+		child.once('close', (code, signal) => {
+			if (code === 0) {
+				resolveSetup();
+				return;
+			}
+			rejectSetup(new Error(
+				`Authentication setup exited with ${signal ? `signal ${signal}` : `code ${code}`}.`,
+			));
+		});
+	});
 }
 
 function createInitialSettings(userDataDir: string): void {
@@ -290,12 +326,44 @@ async function main(): Promise<void> {
 	const sharedDataDir = join(testRoot, 'shared-data-dir');
 	const workspace = join(testRoot, 'workspace');
 
-	copyMissingAuthenticationSeed(options.sourceUserDataDir, userDataDir, [
+	const userDataSeedPaths = [
 		'Local State',
 		'machineid',
 		join('User', 'globalStorage', 'state.vscdb'),
-	]);
-	copyMissingAuthenticationSeed(sourceSharedDataDir, sharedDataDir, ['sharedStorage']);
+	];
+	const sharedDataSeedPaths = ['sharedStorage'];
+	const foundUserDataSource = copyMissingAuthenticationSeed(
+		options.sourceUserDataDir,
+		userDataDir,
+		userDataSeedPaths,
+	);
+	const foundSharedDataSource = copyMissingAuthenticationSeed(
+		sourceSharedDataDir,
+		sharedDataDir,
+		sharedDataSeedPaths,
+	);
+
+	if (!foundUserDataSource || !foundSharedDataSource) {
+		await setupAuthenticationSource(
+			scriptDir,
+			options.sourceUserDataDir,
+			sourceSharedDataDir,
+		);
+		if (
+			!copyMissingAuthenticationSeed(
+				options.sourceUserDataDir,
+				userDataDir,
+				userDataSeedPaths,
+			)
+			|| !copyMissingAuthenticationSeed(
+				sourceSharedDataDir,
+				sharedDataDir,
+				sharedDataSeedPaths,
+			)
+		) {
+			throw new Error('VS Code closed without creating the authentication source directories.');
+		}
+	}
 
 	for (const path of [userDataDir, extensionsDir, sharedDataDir, workspace]) {
 		mkdirSync(path, { recursive: true });
@@ -315,7 +383,7 @@ async function main(): Promise<void> {
 			'--skip-welcome',
 			'--skip-release-notes',
 			workspace,
-		], () => reservation.release());
+		], { beforeSpawn: () => reservation.release() });
 	} finally {
 		await reservation.release();
 	}
