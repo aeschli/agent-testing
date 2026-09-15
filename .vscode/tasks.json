@@ -1,0 +1,42 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Launch isolated TPI VS Code",
+			"type": "shell",
+			"command": "C:\\Users\\martinae\\AppData\\Local\\Programs\\Microsoft VS Code Insiders\\Code - Insiders.exe",
+			"args": [
+				"--new-window",
+				"--user-data-dir=C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\user-data-dir",
+				"--extensions-dir=C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\extensions-dir",
+				"--remote-debugging-address=127.0.0.1",
+				"--remote-debugging-port=9222",
+				"--inspect-extensions=9333",
+				"C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\workspace"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Launch isolated TPI VS Code (wait)",
+			"type": "shell",
+			"command": "C:\\Users\\martinae\\AppData\\Local\\Programs\\Microsoft VS Code Insiders\\bin\\code-insiders.cmd",
+			"args": [
+				"--wait",
+				"--new-window",
+				"--user-data-dir",
+				"C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\user-data-dir",
+				"--extensions-dir",
+				"C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\extensions-dir",
+				"--remote-debugging-address=127.0.0.1",
+				"--remote-debugging-port=9222",
+				"--inspect-extensions=9333",
+				"C:\\Users\\martinae\\OneDrive - Microsoft\\shared-workspaces\\agent-testing\\agent-testing-1\\workspace"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

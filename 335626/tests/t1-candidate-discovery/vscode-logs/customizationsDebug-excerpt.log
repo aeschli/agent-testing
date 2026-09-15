@@ -1,9 +1,0 @@
-Source: user-data-dir/logs/20260911T113156/window6/customizationsDebug.log
-
-2026-09-11 11:45:05.204 [info]   -- MCP Servers (4) --
-2026-09-11 11:45:05.204 [info]      leave-me [0] id=mcp.config.ws0.leave-me
-2026-09-11 11:45:05.204 [info]      migrate-me [0] id=mcp.config.ws0.migrate-me
-2026-09-11 11:45:05.204 [info]      uses-workspace-variable [0] id=mcp.config.ws0.uses-workspace-variable
-2026-09-11 11:45:05.205 [info]      GitHub [0] id=github.copilot-chat/GitHub
-2026-09-11 11:45:08.358 [info] === Customizations Snapshot ===
-2026-09-11 11:45:08.359 [info]   Root: c:\Users\martinae\OneDrive - Microsoft\shared-workspaces\agent-testing\335626\workspace

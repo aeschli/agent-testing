@@ -1,5 +1,0 @@
-Source: user-data-dir/logs/20260911T113156/agenthost.log
-
-2026-09-11 11:44:17.900 [info] MCP server 'migrate-me' connected (ready)
-2026-09-11 11:44:17.904 [info] MCP server 'leave-me' connected (ready)
-2026-09-11 11:44:17.913 [info] session.send() returned

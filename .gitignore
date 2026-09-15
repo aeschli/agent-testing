@@ -1,3 +1,4 @@
 node_modules/
+.vscode-test/
 /*/extensions-dir/
 /*/user-data-dir/

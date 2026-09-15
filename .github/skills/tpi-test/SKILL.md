@@ -5,21 +5,22 @@ description: "Test a GitHub TPI issue against the latest VS Code Insiders build.
 
 # TPI Test
 
-The required input is
-- a GitHub issue URL that describes what to test in VS Code
+The required input is			
+- the GitHub issue URL of a test plan item
+or 
 - a textual description of the test scenario.
 
 If you get a textual description of the test scenario, the create a issue in this repository (https://github.com/aeschli/agent-testing). Check with the user before proceeding to ensure that the issue accurately reflects the intended test scenario.
 
-If no textual description is provided, ask the user to supply one before proceeding.
+Load the GitHub issue or textual description to begin the test planning process.
 
-## Phase 1: Read the Issue
+## Phase 1: Read and understand the issue
 
 1. Validate that the input is a GitHub issue URL and extract its owner, repository, and numeric issue number.
 2. Set the issue number for the current PowerShell session:
 
 	 ```powershell
-	 $env:TPI_ID = '<repo-name>-<TPI_ID>'
+	 $env:TPI_ID = '<repo-name>-<TPI_ID>-<timestamp>'
 	 ```
 
 3. Fetch the issue title, body, and relevant comments with an available GitHub tool or the GitHub API. If the issue is private and cannot be read, ask the user to authenticate through the available GitHub integration; never request or print a token.
@@ -29,24 +30,31 @@ If no textual description is provided, ask the user to supply one before proceed
 
 ## Phase 2: Prepare the Environment
 
+Run `npm install` to ensure all required dependencies, including Playwright, `@vscode/test-electron`, and `@hediet/dbgjs` are installed before proceeding.
+
 ### Verify VS Code Insiders
 
-On Windows, compare the installed version with the latest published version:
+The launch scripts use `@vscode/test-electron` to resolve and download the
+latest Insiders build. Downloads are cached under `.vscode-test`; the API
+checks the Insiders channel before launch and reuses the cached build when it
+is current. If the download or version resolution fails, stop and report the
+blocker instead of falling back to an installed or stable build.
+
+### Create an Authenticated Source Profile for VS Code Insiders
+
+Create or refresh that authenticated source profile before using the test
+launcher:
 
 ```powershell
-$installedVersion = (code-insiders --version | Select-Object -First 1).Trim()
-$latestVersion = (Invoke-RestMethod 'https://update.code.visualstudio.com/api/update/win32-x64-user/insider/latest').productVersion
-$installedVersion
-$latestVersion
+npm run setup-authenticated-user-data
 ```
 
-If the versions differ, run:
+In the window that opens:
 
-```powershell
-winget upgrade --id Microsoft.VisualStudioCode.Insiders --exact --force --accept-source-agreements --accept-package-agreements
-```
-
-Run both version checks again after the upgrade. If `code-insiders`, `winget`, or the update API is unavailable, or the versions still differ, stop and report the blocker instead of claiming that the latest build was tested.
+1. Sign in to GitHub from the Accounts menu and complete the browser flow.
+2. Confirm that the Accounts menu shows the expected GitHub account.
+3. Close that Insiders window so its storage databases are flushed and no
+   source files remain locked.
 
 ### Create Isolated Directories
 
@@ -62,23 +70,6 @@ Create these directories beneath the current workspace without deleting existing
 
 Reuse an existing issue directory only when continuing the same test run. Otherwise, ask before overwriting files from an earlier run.
 
-### Reserve Debug Ports
-
-Use renderer port `9222` and extension-host port `9333` by default. Before launch, verify that neither port is already listening:
-
-```powershell
-Get-NetTCPConnection -State Listen -LocalPort 9222,9333 -ErrorAction SilentlyContinue
-```
-
-If either port is occupied, do not attach to it blindly. Select unused local ports, update all later commands consistently, and set `VSCODE_CDP_ENDPOINT` to the selected renderer endpoint. Keep the endpoints on `127.0.0.1`; debugger access permits control of the corresponding process and must not be exposed to an untrusted network.
-
-### Install Playwright
-
-If Playwright is not already declared in this project's `package.json`, install it:
-
-```powershell
-npm install --save-dev playwright
-```
 
 ## Phase 3: Write the Plan and Stop for Approval
 
@@ -100,7 +91,8 @@ Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan mu
 - a concise feature summary and links or repository paths for research sources;
 - a coverage matrix mapping every explicit TPI requirement to one or more planned tests;
 - each test's origin, labeled `TPI` or `Exploratory`, and its priority;
-- the installed and latest Insiders versions;
+- the requested `insiders` channel, with placeholders for the exact version
+  and commit to record after launch;
 - prerequisites, setup files, settings, and extensions;
 - numbered actions and expected results for every test item;
 - exploratory charters, hypotheses, time or scope bounds, and stopping conditions;
@@ -109,98 +101,35 @@ Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan mu
 
 Present the plan to the user and explicitly ask for approval. **Stop here. Do not launch the test instance, create test fixtures, install test-specific extensions, or execute any test item until the user approves the plan.** Environment inspection, version upgrade, directory creation, and Playwright installation may occur before approval.
 
-## Phase 4: Launch VS Code Insiders
+## Phase 4: Launch VS Code Insiders for testing
 
-After approval, configure the isolated profile to open directly on the test
-workspace rather than showing the Welcome editor:
-
-```json
-{
-	"workbench.startupEditor": "none",
-	"window.dialogStyle": "custom"
-}
-```
-
-Merge this setting with any test-specific settings instead of replacing them.
-Custom dialogs keep supported confirmations and information dialogs within the
-workbench renderer so Playwright can observe and capture them.
-Before launching, check whether the selected renderer endpoint already belongs
-to an instance using this issue's `user-data-dir`. Reuse that instance rather
-than launching a second window. Do not close or modify unrelated VS Code
-windows.
-
-When there is no existing instance for this issue, launch exactly one isolated
-VS Code Insiders window with the selected ports:
+Then launch the isolated TPI instance:
 
 ```powershell
-code-insiders `
-	--new-window `
-	--user-data-dir ".\$env:TPI_ID\user-data-dir" `
-	--extensions-dir ".\$env:TPI_ID\extensions-dir" `
-	--remote-debugging-address=127.0.0.1 `
-	--remote-debugging-port=9222 `
-	--inspect-extensions=9333 `
-	".\$env:TPI_ID\workspace"
+npm run start-vscode -- --tpi-id $env:TPI_ID
 ```
 
-When alternate ports were selected, substitute them in this command and all commands below. Confirm that the endpoints belong to the newly launched isolated instance:
-
-```powershell
-Invoke-RestMethod http://127.0.0.1:9222/json/version
-Invoke-RestMethod http://127.0.0.1:9222/json/list |
-	Select-Object title, url, webSocketDebuggerUrl
-Invoke-RestMethod http://127.0.0.1:9333/json/list |
-	Select-Object title, type, webSocketDebuggerUrl
-```
-
-Verify that the renderer endpoint exposes exactly one workbench page and that
-its title is the test workspace. If it exposes multiple workbench pages, stop
-and close only surplus windows belonging to this issue's isolated
-`user-data-dir`; never close unrelated VS Code windows. Trust the test
-workspace and dismiss first-run sign-in or onboarding dialogs before capturing
-test evidence. If authentication is required for the test, ask the user to
-complete it rather than selecting a signed-out path.
-
-Record the tested version and commit from `code-insiders --version`. Also
-confirm that the isolated workbench URL contains the same commit. Open
-**About** and confirm that it agrees with the command-line version. If the
-platform ignores the custom-dialog setting and renders **About** outside
-Playwright's automation surface, record that limitation and use the CLI and
-workbench URL checks; do not use system-wide keystroke or window automation
-solely to inspect it.
-
-
-Now ask the user to sign in with GitHub in VS Code Insiders before proceeding to Phase 5.
+The launcher prepares the isolated profile, starts the latest Insiders build,
+validates both debugger endpoints, and prints their ports and URLs. Use those
+printed values for observation and debugging. Trust the test workspace and
+dismiss first-run sign-in or onboarding dialogs before capturing test
+evidence. Confirm that the cloned profile is signed in before continuing.
+If the source session has expired, ask the user to refresh it in the source
+profile rather than signing into the isolated test profile.
 
 ## Phase 5: Observe and Execute
 
-### Interactive Observation
+Follow [Observe and execute VS Code with Playwright](./observe-and-execute.md)
+for interactive observation, unattended execution, and evidence capture.
+These instructions are required for every test item.
 
-Use the bundled observer only when a human will work with Playwright Inspector:
+When an approved test requires source-level evidence, also follow
+[Observe and debug VS Code](./observe-and-debug.md) for extension-host
+debugging.
 
-```powershell
-$env:PWDEBUG = '1'
-$env:VSCODE_CDP_ENDPOINT = 'http://127.0.0.1:9222'
-node .copilot/skills/tpi-test/observe-vscode.js
-```
+## Phase 5: Perform Tests
 
-The observer connects over CDP, prints discovered pages, selects the workbench, and pauses in Playwright Inspector. It is not an unattended test runner.
-
-### Unattended Execution
-
-For agent-driven execution, create a test-specific Playwright script under `<TPI_ID>/tests/<test-item-name>/` that connects with `chromium.connectOverCDP`. Do not call `page.pause()` or `workbench.pause()` in an unattended script. Use accessibility roles, labels, and stable `data-*` attributes instead of deeply nested CSS selectors.
-
-Capture the evidence required by the approved plan, including relevant workbench text, screenshots, browser console messages, page errors, and failed requests. Also inspect the VS Code logs written by the isolated instance under `<TPI_ID>/user-data-dir/logs`. Identify the directory for the current VS Code session and preserve relevant files or excerpts, such as window, renderer, extension-host, shared-process, and extension-specific logs. Keep their relative source paths so the producing process is clear. Do not include unrelated log content, credentials, tokens, or other sensitive values in test artifacts.
-
-Use the extension-host debugger only when the test requires source-level evidence:
-
-```powershell
-node inspect 127.0.0.1:9333
-```
-
-For programmatic breakpoints, stack frames, console events, or expression evaluation, use a Node Inspector Protocol client. Relaunch with `--inspect-brk-extensions=9333` only when extension activation must pause before running.
-
-Execute test items in the approved order. Create required fixtures only under `<TPI_ID>/workspace` unless the approved plan specifies otherwise. Do not silently change the plan while testing; record deviations and ask for approval when they materially alter scope or expected behavior.
+Execute each test item according to the approved plan. Record observations, capture evidence, and note any deviations from the expected behavior. Ensure that all steps are followed precisely to maintain the integrity of the test results.
 
 ## Phase 6: Record Results
 
@@ -211,7 +140,8 @@ Store each test item's evidence using this layout:
 	test.md
 	screenshots/
 	vscode-logs/
-	console.log
+	reported-issues/
+	chat-session-log/
 	test-script.js
 ```
 
@@ -229,5 +159,13 @@ Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and 
 - relevant browser console, VS Code log, or debugger output, including the original VS Code log path;
 - deviations from the approved plan;
 - workspace-relative links to screenshots and other evidence.
+- store issue to report in `reported-issues/`
+- store the chat session log in `chat-session-log/
 
 Finish with a concise summary in `<TPI_ID>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
+
+## Phase 7: Reflect on test run
+
+In this phase, consider what went well and what could be improved in the testing process.
+- If some steps were difficult to perform in VS Code, note the specific challenges and any workarounds used. Suggest improvements to VS Code such as UI enhancements, better documentation, or additional automation support.
+- If this Skill was not clear, provide feedback on which parts were confusing or lacked sufficient detail. Suggest improvements to make the instructions more understandable and actionable.
