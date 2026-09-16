@@ -1,0 +1,196 @@
+﻿TITLE=Testing Agent — C:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260916-172633\custom-agent-inventory-consistency
+URL=vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/c74ba73b78/resources/app/out/vs/code/electron-browser/workbench/workbench.html
+- application:
+  - menubar:
+    - menuitem "File"
+    - menuitem "Edit"
+    - menuitem "Selection"
+    - menuitem "View"
+    - menuitem "Go"
+    - menuitem "Run"
+    - menuitem "Terminal"
+    - menuitem "Help"
+  - toolbar:
+    - button "Open in Agents Window (Ctrl+Shift+A)": Open in Agents
+  - toolbar "Title actions":
+    - button "Customize Layout...": 
+    - button "Toggle Primary Side Bar (Ctrl+B)" [pressed]: 
+    - button "Toggle Panel (Ctrl+J)" [pressed]: 
+    - button "Toggle Secondary Side Bar (Ctrl+Alt+B)" [pressed]: 
+  - tablist "Active View Switcher":
+    - tab "Explorer (Ctrl+Shift+E)" [expanded] [selected]: 
+    - tab "Search (Ctrl+Shift+F)": 
+    - tab "Source Control (Ctrl+Shift+G)": 
+    - tab "Run and Debug (Ctrl+Shift+D)": 
+    - tab "Extensions (Ctrl+Shift+X)": 
+    - tab "Chat Debug"
+  - toolbar "Manage":
+    - button "Accounts"
+    - button "Manage": 
+  - heading "Explorer" [level=2]
+  - toolbar "Explorer actions":
+    - button "Views and More Actions...": 
+  - toolbar
+  - 'button "Explorer Section: workspace" [expanded]':
+    - text: 
+    - 'heading "Explorer Section: workspace" [level=3]': workspace
+  - tree "Files Explorer":
+    - treeitem ".custom" [level=1]:  .custom
+    - treeitem ".github" [level=1]:  .github
+    - treeitem ".vscode" [level=1]:  .vscode
+    - treeitem "mcp" [level=1]:  mcp
+    - treeitem ".env" [level=1]:  .env
+    - treeitem ".mcp.json" [level=1]:  .mcp.json
+    - treeitem "README.md" [level=1]:  README.md
+  - button "Outline Section":
+    - text: 
+    - heading "Outline" [level=3]
+  - button "Timeline Section":
+    - text: 
+    - heading "Timeline" [level=3]
+  - main:
+    - toolbar
+    - term: Open Chat
+    - definition: Ctrl + Alt + I
+    - term: Show All Commands
+    - definition: Ctrl + Shift + P
+    - term: Go to File
+    - definition: Ctrl + P
+  - tablist "Active View Switcher":
+    - tab "Problems (Ctrl+Shift+M)": Problems
+    - tab "Output (Ctrl+Shift+U)" [expanded] [selected]: Output
+    - tab "Additional Views": 
+  - toolbar "Output actions":
+    - textbox "Filter (e.g. text, !excludeText, text1,text2)"
+    - toolbar:
+      - button "More Filters...": 
+    - combobox "Switch Output":
+      - option "Git"
+      - option "GitHub"
+      - option "GitHub Authentication"
+      - option "GitHub Copilot Chat"
+      - option "GitHub Copilot Log (Code References)"
+      - option "JSON Language Server"
+      - option "Markdown Language Server"
+      - option "Microsoft Authentication"
+      - option "─────────" [disabled]
+      - option "Agent Host"
+      - option "Agent Sessions"
+      - option "Extension Host"
+      - option "Main"
+      - option "MCP Gateway"
+      - 'option "MCP: uses-dev-mode" [selected]'
+      - option "Remote Tunnel Service"
+      - option "Settings Sync"
+      - option "Shared"
+      - option "Tasks"
+      - option "Terminal"
+      - option "Text Model Changes Reason"
+      - option "Window"
+    - text: 
+    - button "Clear Output": 
+    - button "Turn Auto Scrolling Off": 
+    - button "Set Log Level...": 
+    - button "Views and More Actions...": 
+  - toolbar:
+    - button "Maximize Panel": 
+    - button "Hide Panel (Ctrl+J)": 
+  - 'document "MCP: uses-dev-mode - Output"':
+    - code:
+      - textbox "The editor is not accessible at this time. To enable screen reader optimized mode, use Shift+Alt+F1"
+  - tablist "Active View Switcher":
+    - tab "Chat (Ctrl+Alt+I)" [expanded] [selected]: Chat
+  - toolbar "Chat actions":
+    - button "New Chat (Ctrl+N)": 
+    - button "New Chat": 
+    - button "Open Customizations": 
+    - button "Views and More Actions...": 
+  - toolbar:
+    - button "Maximize Secondary Side Bar": 
+    - button "Hide Secondary Side Bar (Ctrl+Alt+B)": 
+  - text: Sessions
+  - toolbar:
+    - button "Refresh Agent Sessions": 
+    - button "Find Agent Session": 
+    - button "Filter Agent Sessions": 
+    - button "Show Agent Sessions Sidebar": 
+  - list "Agent Sessions"
+  - 'region "Tip: Reference files or folders with # to give the agent more context about the task."':
+    - paragraph:
+      - strong: "Tip:"
+      - text: "Reference files or folders with # to give the agent more context about the task."
+    - toolbar:
+      - button "Previous tip": 
+      - button "Next tip": 
+      - button "Dismiss tip": 
+      - button "Disable tips": 
+  - code:
+    - textbox "The editor is not accessible at this time. To enable screen reader optimized mode, use Shift+Alt+F1"
+    - text: Chat with Copilot
+  - toolbar:
+    - button "Add Context... (Ctrl+/)": 
+    - button "Agent":  Agent
+    - group "Models, GPT-5.6 Sol":
+      - button "Models, GPT-5.6 Sol": 
+  - toolbar:
+    - listitem:
+      - button "Dictation (Ctrl+I)": 
+      - button "Voice Mode (Ctrl+Shift+Space)"
+    - button "Send [Alt] Send to New Chat (Ctrl+Shift+Enter)" [disabled]: 
+  - toolbar:
+    - button "Copilot":  Copilot
+    - group "Pick Mode and Permissions, Interactive, Manual permissions":
+      - button "Pick Mode, Interactive"
+    - button "Allow connections from other machines and insiders.vscode.dev/agents": 
+  - status:
+    - button "remote": 
+    - button "No Problems":  0  0
+    - button "Notifications": 
+    - button "Copilot status": 
+  - alert
+  - alert: GPT-5.6 Sol
+  - text: 2 agents
+  - dialog "Agent Customizations":
+    - text: Agent Customizations(Copilot · workspace)
+    - toolbar
+    - toolbar:
+      - button "Open Modal Editor in Main Window": 
+      - button "Maximize Modal Editor": 
+      - button "Close Modal Editor (Escape)": 
+    - button "Overview"
+    - list "Agent Customization Sections":
+      - listitem "Plugins":  Plugins
+      - listitem "MCP Servers, 20 items":  MCP Servers 20
+      - listitem "Skills":  Skills
+      - listitem "Instructions":  Instructions
+      - listitem "Agents, 2 items":  Agents 2
+      - listitem "Hooks":  Hooks
+      - listitem "Tools, 24 items":  Tools 24
+    - button "Migrations, 5 customizations need attention": Migrations 5
+    - heading "Agents" [level=2]
+    - paragraph:
+      - text: Configure the AI to adopt different personas tailored to specific development tasks. Each agent has its own instructions, tools, and behavior.
+      - link "Learn more about custom agents":
+        - /url: https://code.visualstudio.com/docs/agent-customization/custom-agents?referrer=in-product
+    - textbox "Type to search..."
+    - text: 
+    - heading "Workspace" [level=3]
+    - text: 2 Customizations stored as files in your project folder and shared with your team via version control.
+    - button "New Agent"
+    - list "Workspace":
+      - listitem "agent-one. This is agent one.. Loaded":
+        - text: agent-one This is agent one.
+        - toolbar:
+          - button "More actions for agent-one": 
+      - listitem "agent-two. This is agent two.. Loaded":
+        - text: agent-two This is agent two.
+        - toolbar:
+          - button "More actions for agent-two": 
+    - text: 
+    - heading "User" [level=3]
+    - text: 0 Customizations stored locally on your machine in a central location. Private to you and available across all projects.
+    - button "New Agent"
+    - text: No user agents yet.
+  - textbox "Enter the name of the agent file"
+  - text: Press 'Enter' to confirm your input or 'Escape' to cancel
+  - toolbar

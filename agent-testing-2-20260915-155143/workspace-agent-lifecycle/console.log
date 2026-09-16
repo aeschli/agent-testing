@@ -1,0 +1,10 @@
+2026-09-15T16:39:21.9835499+02:00 No relevant browser console errors, page errors, or failed requests were observed during the final workflow.
+2026-09-15T16:39:21.9867055+02:00 Debugger evidence: renderer http://127.0.0.1:60799 and extension host http://127.0.0.1:60801 were validated by the launcher.
+2026-09-15T14:39:25.781Z console.warning: %c WARN color: #993 No harness descriptor found for session type agent-host-copilotcli
+2026-09-15T14:39:25.984Z console.error: %c  ERR color: #f33 [AHPLog] Failed to write transport log wa: Unable to write file 'c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260915-155143\workspace-agent-lifecycle\user-data-dir\logs\20260915T161200\ahp\ahp-2026-09-15T14-12-02-606Z-ab374994-f1f9-4cbe-bffc-c95b2311fd91.jsonl' (Canceled: Canceled)
+    at fge.writeFile (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/7debcd0e2a/resources/app/out/vs/workbench/workbench.desktop.main.js:5574:90726)
+    at async n (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/7debcd0e2a/resources/app/out/vs/workbench/workbench.desktop.main.js:5632:701)
+    at async Age._drainPending (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/7debcd0e2a/resources/app/out/vs/workbench/workbench.desktop.main.js:5632:989)
+2026-09-15T14:39:25.985Z console.warning: Error: Trying to add a disposable to a DisposableMap that has already been disposed of. The added object will be leaked!
+    at Ct.set (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/7debcd0e2a/resources/app/out/vs/workbench/workbench.desktop.main.js:431:4379)
+    at PQe.sync (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/7debcd0e2a/resources/app/out/vs/workbench/workbench.desktop.main.js:4034:63579)

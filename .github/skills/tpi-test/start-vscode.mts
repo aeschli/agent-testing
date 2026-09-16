@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, statSync, writeFileSync } from 'node:fs';
 import { createServer, type Server } from 'node:net';
 import { homedir } from 'node:os';
-import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import {
@@ -12,11 +12,15 @@ import {
 } from './vscode-launch-utils.mts';
 
 interface LaunchOptions {
-	tpiId?: string;
+	rootDir?: string;
 	rendererPort?: number;
 	extensionHostPort?: number;
 	sourceUserDataDir: string;
 	sourceSharedDataDir?: string;
+}
+
+interface ParsedLaunchOptions extends LaunchOptions {
+	rootDir: string;
 }
 
 interface PortReservation {
@@ -192,7 +196,7 @@ async function reserveDebugPorts(options: LaunchOptions): Promise<PortReservatio
 	};
 }
 
-function parseArgs(args: string[]): LaunchOptions {
+function parseArgs(args: string[]): ParsedLaunchOptions {
 	const options: LaunchOptions = {
 		sourceUserDataDir: join(homedir(), 'authenticated-user-data-dir'),
 	};
@@ -203,8 +207,8 @@ function parseArgs(args: string[]): LaunchOptions {
 		index = result.nextIndex;
 
 		switch (option) {
-			case '--tpi-id':
-				options.tpiId = result.value;
+			case '--root-dir':
+				options.rootDir = result.value;
 				break;
 			case '--renderer-port':
 				options.rendererPort = parsePort(result.value, option);
@@ -223,10 +227,27 @@ function parseArgs(args: string[]): LaunchOptions {
 		}
 	}
 
-	if (!options.tpiId) {
-		throw new Error('Missing required argument: --tpi-id.');
+	if (!options.rootDir) {
+		throw new Error('Missing required argument: --root-dir.');
 	}
-	return options;
+	return {
+		...options,
+		rootDir: options.rootDir,
+	};
+}
+
+function resolveChildPath(parent: string, child: string, description: string): string {
+	const resolved = resolve(parent, child);
+	const relativePath = relative(parent, resolved);
+	if (
+		!relativePath
+		|| relativePath === '..'
+		|| relativePath.startsWith(`..${sep}`)
+		|| isAbsolute(relativePath)
+	) {
+		throw new Error(`${description} resolves outside its parent directory: ${child}`);
+	}
+	return resolved;
 }
 
 function assertPathExists(path: string, description: string): void {
@@ -295,7 +316,7 @@ async function setupAuthenticationSource(
 	});
 }
 
-function createInitialSettings(userDataDir: string): void {
+function createInitialSettings(userDataDir: string, rootDir: string): void {
 	const userDir = join(userDataDir, 'User');
 	const settingsPath = join(userDir, 'settings.json');
 	if (existsSync(settingsPath)) {
@@ -306,6 +327,10 @@ function createInitialSettings(userDataDir: string): void {
 	writeFileSync(settingsPath, `${JSON.stringify({
 		'workbench.startupEditor': 'none',
 		'window.dialogStyle': 'custom',
+		"workbench.colorTheme": "Monokai",
+		"files.autoSave": "afterDelay",
+		"files.simpleDialog.enable": true,
+		"window.title": `Testing Agent — ${rootDir}`
 	}, undefined, '\t')}\n`);
 }
 
@@ -313,18 +338,17 @@ async function main(): Promise<void> {
 	const options = parseArgs(process.argv.slice(2));
 	const scriptDir = dirname(fileURLToPath(import.meta.url));
 	const repositoryRoot = resolve(scriptDir, '..', '..', '..');
-	const testRoot = resolve(repositoryRoot, options.tpiId!);
-	const relativeTestRoot = relative(repositoryRoot, testRoot);
-	if (relativeTestRoot.startsWith('..') || isAbsolute(relativeTestRoot)) {
-		throw new Error(`TPI ID resolves outside the repository: ${options.tpiId}`);
-	}
+	const outputRoot = resolveChildPath(repositoryRoot, options.rootDir, 'Root directory');
 
 	const sourceSharedDataDir = options.sourceSharedDataDir
 		?? join(options.sourceUserDataDir, 'shared-data');
-	const userDataDir = join(testRoot, 'user-data-dir');
-	const extensionsDir = join(testRoot, 'extensions-dir');
-	const sharedDataDir = join(testRoot, 'shared-data-dir');
-	const workspace = join(testRoot, 'workspace');
+	const userDataDir = join(outputRoot, 'user-data-dir');
+	const extensionsDir = join(outputRoot, 'extensions-dir');
+	const sharedDataDir = join(userDataDir, 'shared-data');
+	const workspace = join(outputRoot, 'workspace');
+	const screenshotsDir = join(outputRoot, 'screenshots');
+	const vscodeLogsDir = join(outputRoot, 'vscode-logs');
+	const reportedIssuesDir = join(outputRoot, 'reported-issues');
 
 	const userDataSeedPaths = [
 		'Local State',
@@ -365,10 +389,18 @@ async function main(): Promise<void> {
 		}
 	}
 
-	for (const path of [userDataDir, extensionsDir, sharedDataDir, workspace]) {
+	for (const path of [
+		userDataDir,
+		extensionsDir,
+		sharedDataDir,
+		workspace,
+		screenshotsDir,
+		vscodeLogsDir,
+		reportedIssuesDir,
+	]) {
 		mkdirSync(path, { recursive: true });
 	}
-	createInitialSettings(userDataDir);
+	createInitialSettings(userDataDir, outputRoot);
 
 	const reservation = await reserveDebugPorts(options);
 	try {

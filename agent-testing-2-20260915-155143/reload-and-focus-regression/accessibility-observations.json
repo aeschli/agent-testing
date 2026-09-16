@@ -1,0 +1,50 @@
+[
+  {
+    "control": "Chat agent selector",
+    "ariaLabel": "Agent",
+    "visibleFocus": false
+  },
+  {
+    "phase": "pre-reload dropdown",
+    "text": "e\":\"object\",\"properties\":{},\n\"additionalProperties\":false},\"annotations\":{\"readOnlyHint\":true,\n\"destructiveHint\":false,\"openWorldHint\":false}}]}}\n2026-09-15 16:12:20.059 [info] Discovered 1 tools\nChat\nSessions\n\nTip: Configure default permissions to start new sessions in Bypass Approvals or Autopilot mode.\n\nagent-two.agent.md\nChat with Copilot\nAgent\nCopilot\n 0 \n 0\nAgent\nCRLF\nUTF-8\nSpaces: 2\nLn 2, Col 20\nNo results found\nSaved\nAgent\nCtrl+Shift+I\nagent-three\nagent-two-new\nConfigure Custom Agents..."
+  },
+  {
+    "control": "Chat agent selector",
+    "ariaLabel": "Agent",
+    "visibleFocus": true
+  },
+  {
+    "phase": "post-reload dropdown",
+    "text": "e\":\"object\",\"properties\":{},\n\"additionalProperties\":false},\"annotations\":{\"readOnlyHint\":true,\n\"destructiveHint\":false,\"openWorldHint\":false}}]}}\n2026-09-15 16:12:20.059 [info] Discovered 1 tools\nChat\nSessions\n\nTip: Configure default permissions to start new sessions in Bypass Approvals or Autopilot mode.\n\nagent-two.agent.md\nChat with Copilot\nAgent\nCopilot\n 0 \n 0\nAgent\nCRLF\nUTF-8\nSpaces: 2\nLn 2, Col 20\nNo results found\nSaved\nAgent\nCtrl+Shift+I\nagent-three\nagent-two-new\nConfigure Custom Agents..."
+  },
+  {
+    "phase": "selected agent-three",
+    "visible": true
+  },
+  {
+    "control": "Chat agent selector",
+    "ariaLabel": "Agent",
+    "visibleFocus": true
+  },
+  {
+    "phase": "selected agent-two-new",
+    "visible": true
+  },
+  {
+    "control": "Open Customizations",
+    "ariaLabel": "Open Customizations",
+    "visibleFocus": true
+  },
+  {
+    "phase": "post-reload Customizations",
+    "text": "Chat with Copilot\nagent-three\nCopilot\n 0 \n 0\nAgent\nCRLF\nUTF-8\nSpaces: 2\nLn 2, Col 14\nagent-three\n2 agents\nAgent Customizations(Copilot · workspace)\nOverview\nPlugins\nMCP Servers\n20\nSkills\nInstructions\nAgents\n2\nHooks\nTools\n24\nMigrations\n5\nAgents\n\nConfigure the AI to adopt different personas tailored to specific development tasks. Each agent has its own instructions, tools, and behavior. Learn more about custom agents\n\nWorkspace\n2\nCustomizations stored as files in your project folder and shared with your team via version control.\nNew Agent\nagent-three\nDescribe what this custom agent does and when to use it.\nagent-two-new\nThis is agent two.\nUser\n0\nCustomizations stored locally on your machine in a central location. Private to you and available across all projects.\nNew Agent\nNo user agents yet."
+  },
+  {
+    "phase": "opened agent-three",
+    "editorTextPresent": true
+  },
+  {
+    "phase": "opened agent-two-new",
+    "editorTextPresent": true
+  }
+]

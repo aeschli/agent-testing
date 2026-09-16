@@ -1,0 +1,125 @@
+{
+  "checks": [
+    {
+      "actual": {
+        "readmeExists": true,
+        "visibleHeading": true
+      },
+      "expected": "README.md at workspace root and visible in editor",
+      "name": "Root README exists and opens",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:49.806Z"
+    },
+    {
+      "actual": "Copilot",
+      "expected": "Visible Copilot harness button",
+      "name": "Copilot harness selected",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:50.474Z"
+    },
+    {
+      "actual": [
+        "agent-one",
+        "agent-two"
+      ],
+      "expected": "Exactly agent-one and agent-two, once each",
+      "name": "Initial Workspace agent inventory",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:51.145Z"
+    },
+    {
+      "actual": "---\r\nname: agent-two-new\r\ndescription: This is agent two.\r\nmodel: GPT-5.4\r\ntools: [execute, read, edit, search, web, agent, todo]\r\nhandoffs: \r\n  - label: Start Implementation\r\n    agent: agent\r\n    prompt: Implement the plan\r\n    send: true\r\n    model: GPT-5.4 (copilot)\r\n---",
+      "expected": "Only name changes to agent-two-new",
+      "name": "Rename persisted to frontmatter",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:52.829Z"
+    },
+    {
+      "actual": [
+        "agent-one",
+        "agent-two-new"
+      ],
+      "expected": "agent-two-new once; agent-two absent",
+      "name": "Renamed Customizations inventory",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:53.049Z"
+    },
+    {
+      "actual": {
+        "agent-two-new": 1,
+        "agent-two": 0
+      },
+      "expected": "Exactly one of agent-two-new; none of agent-two",
+      "name": "Chat dropdown: renamed-chat-dropdown.png",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:53.429Z"
+    },
+    {
+      "actual": "---\r\nname: agent-three\r\ndescription: Describe what this custom agent does and when to use it.\r\nargument-hint: The inputs this agent expects, e.g., \"a task to implement\" or \"a question to answer\".\r\n# tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo'] # specify the tools this agent can use. If not set, all enabled tools are allowed.\r\n---\r\n\r\n<!-- Tip: Use /create-agent in chat to generate content with agent assistance -->\r\n\r\nDefine what this custom agent does, including its behavior, capabilities, and any specific instructions for its operation.",
+      "expected": "Valid .github/agents/agent-three.agent.md with name agent-three",
+      "name": "Workspace agent-three backing file",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:55.961Z"
+    },
+    {
+      "actual": [
+        "agent-one",
+        "agent-three",
+        "agent-two-new"
+      ],
+      "expected": "agent-three appears exactly once",
+      "name": "Created Customizations inventory",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:56.234Z"
+    },
+    {
+      "actual": {
+        "agent-three": 1,
+        "agent-two": 0
+      },
+      "expected": "Exactly one of agent-three; none of agent-two",
+      "name": "Chat dropdown: created-chat-dropdown.png",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:56.611Z"
+    },
+    {
+      "actual": [
+        "agent-three",
+        "agent-two-new"
+      ],
+      "expected": "agent-one and stale agent-two absent; agent-two-new and agent-three once each",
+      "name": "Final Customizations inventory",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:58.304Z"
+    },
+    {
+      "actual": {
+        "agent-two-new": 1,
+        "agent-three": 1,
+        "agent-one": 0,
+        "agent-two": 0
+      },
+      "expected": "Exactly one of agent-two-new, agent-three; none of agent-one, agent-two",
+      "name": "Chat dropdown: final-chat-dropdown.png",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:58.741Z"
+    },
+    {
+      "actual": {
+        "agentOneExists": false,
+        "agentThreeContent": "---\r\nname: agent-three\r\ndescription: Describe what this custom agent does and when to use it.\r\nargument-hint: The inputs this agent expects, e.g., \"a task to implement\" or \"a question to answer\".\r\n# tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo'] # specify the tools this agent can use. If not set, all enabled tools are allowed.\r\n---\r\n\r\n<!-- Tip: Use /create-agent in chat to generate content with agent assistance -->\r\n\r\nDefine what this custom agent does, including its behavior, capabilities, and any specific instructions for its operation.",
+        "agentThreeExists": true,
+        "agentTwoContent": "---\r\nname: agent-two-new\r\ndescription: This is agent two.\r\nmodel: GPT-5.4\r\ntools: [execute, read, edit, search, web, agent, todo]\r\nhandoffs: \r\n  - label: Start Implementation\r\n    agent: agent\r\n    prompt: Implement the plan\r\n    send: true\r\n    model: GPT-5.4 (copilot)\r\n---",
+        "agentTwoExists": true
+      },
+      "expected": "agent-one deleted; agent-two renamed in frontmatter; agent-three valid",
+      "name": "Final backing files",
+      "passed": true,
+      "timestamp": "2026-09-16T16:05:58.958Z"
+    }
+  ],
+  "notes": [
+    "agent-three was already selected automatically after creation.",
+    "Deletion confirmation shown: Delete Cancel Are you sure you want to delete 'agent-one.agent.md'? This action cannot be undone."
+  ]
+}

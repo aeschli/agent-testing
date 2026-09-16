@@ -1,26 +1,27 @@
 ---
 name: tpi-test
 description: "Test a GitHub TPI issue against the latest VS Code Insiders build. Use when given a GitHub issue URL that contains manual test-plan items requiring Playwright workbench observation, screenshots, console evidence, or extension-host debugging."
+argument-hint: The URL of the GitHub issue or a textual description of the test scenario.
 ---
 
 # TPI Test
 
-The required input is			
-- the GitHub issue URL of a test plan item
-or 
+The required input is either:
+
+- the GitHub issue URL of a test plan item; or
 - a textual description of the test scenario.
 
-If you get a textual description of the test scenario, the create a issue in this repository (https://github.com/aeschli/agent-testing). Check with the user before proceeding to ensure that the issue accurately reflects the intended test scenario.
+If you receive a textual description of the test scenario, draft an issue for this repository (https://github.com/aeschli/agent-testing). Before creating the issue, ask the user to confirm that the draft accurately reflects the intended test scenario.
 
 Load the GitHub issue or textual description to begin the test planning process.
 
 ## Phase 1: Read and understand the issue
 
 1. Validate that the input is a GitHub issue URL and extract its owner, repository, and numeric issue number.
-2. Set the issue number for the current PowerShell session:
+2. Compose the test ID from the repository name, issue number, and a timestamp:
 
 	 ```powershell
-	 $env:TPI_ID = '<repo-name>-<TPI_ID>-<timestamp>'
+	 $env:TEST_ID = '<repo-name>-<issue-number>-<timestamp>'
 	 ```
 
 3. Fetch the issue title, body, and relevant comments with an available GitHub tool or the GitHub API. If the issue is private and cannot be read, ask the user to authenticate through the available GitHub integration; never request or print a token.
@@ -45,15 +46,9 @@ an Insiders profile for GitHub sign-in and resumes after that window closes.
 
 ### Create Isolated Directories
 
-Create these directories beneath the current workspace without deleting existing evidence:
-
-```text
-<$env:TPI_ID>/
-	workspace/
-	user-data-dir/
-	extensions-dir/
-	tests/
-```
+Create a folder named `<test-id>` in the current workspace without deleting
+existing evidence. Each test item will use an isolated root at
+`<test-id>/<test-variation-name>/`.
 
 Reuse an existing issue directory only when continuing the same test run. Otherwise, ask before overwriting files from an earlier run.
 
@@ -72,12 +67,14 @@ Design a focused set of tests rather than mechanically copying the issue steps. 
 
 Do not add variations only to inflate the test count. Prioritize cases by user impact, likelihood of failure, and the change's implementation risk. Keep exploratory work bounded with a clear charter, evidence to collect, and stopping condition. If research does not establish an expected result, label the case as exploratory and describe the behavior being investigated rather than inventing a requirement.
 
-Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan must contain:
+Create `<test-id>/test-plan.md` before performing any testing. The plan must contain:
 
-- the source issue URL and extracted test items;
+- the source issue URL and extracted test variations;
 - a concise feature summary and links or repository paths for research sources;
 - a coverage matrix mapping every explicit TPI requirement to one or more planned tests;
-- each test's origin, labeled `TPI` or `Exploratory`, and its priority;
+- each test variation's origin, labeled `TPI` or `Exploratory`, and its priority;
+- each test variation's `<test-variation-name>` and resulting
+  `<test-root-dir>` (`<test-id>/<test-variation-name>/`);
 - the requested `insiders` channel, with placeholders for the exact version
   and commit to record after launch;
 - prerequisites, setup files, settings, and extensions;
@@ -88,69 +85,31 @@ Create `<$env:TPI_ID>/test-plan.md` before performing any test item. The plan mu
 
 Present the plan to the user and explicitly ask for approval. **Stop here. Do not launch the test instance, create test fixtures, install test-specific extensions, or execute any test item until the user approves the plan.** Environment inspection, version upgrade, directory creation, and Playwright installation may occur before approval.
 
-## Phase 4: Testing
+## Phase 4: Coordinate Testing
 
-Run the following steps in a subagent in the background. From time to time check the progress and ensure that no errors have occurred.
+Run each test variation as an independently managed subsession.
+If a tool for running a subsession is available, use it; otherwise, use a subagent.
 
-### Launch Isolated TPI Instance
+Ensure that each test variation run has its setup, execution, and teardown properly handled.
 
-Then launch the isolated TPI instance:
+Instructions for a subsession can be found in [Test Variation Run Instructions](./test-variation-run-instructions.md)
 
-```powershell
-npm run start-vscode -- --tpi-id $env:TPI_ID
-```
+Provide each subsession with this document, its `<test-root-dir>`, and the necessary context, including what to test, the test plan, the test variation name, setup instructions, and any relevant dependencies.
 
-The launcher prepares the isolated profile, starts the latest Insiders build,
-validates both debugger endpoints, and prints their ports and URLs. Use those
-printed values for observation and debugging. Trust the test workspace and
-dismiss first-run sign-in or onboarding dialogs before capturing test
-evidence. Confirm that the cloned profile is signed in before continuing.
-If the source session has expired, ask the user to refresh it in the source
-profile rather than signing into the isolated test profile.
+Every 60 seconds:
 
-### Observe and Execute
+- retrieve the latest available conversation context for each subsession and
+  save it as a timestamped snapshot under
+  `<test-root-dir>/chat-session-log/`. Treat these files as progress snapshots,
+  not guaranteed complete raw session transcripts;
+- give a status update on the progress of each subsession.
 
-Follow [Observe and execute VS Code with Playwright](./observe-and-execute.md)
-for interactive observation, unattended execution, and evidence capture.
-These instructions are required for every test item.
+Instruct each subsession to record important decisions, blockers, commands,
+and evidence in its `test-result.md`. Treat this file as the authoritative
+record of the test variation.
 
-## Run and Record Results
+## Phase 5: Conclude
 
-Execute each test item according to the approved plan. Record observations, capture evidence, and note any deviations from the expected behavior. Ensure that all steps are followed precisely to maintain the integrity of the test results.
+Once all subsessions have completed their testing:
 
-Store each test item's evidence using this layout:
-
-```text
-<TPI_ID>/tests/<test-item-name>/
-	test.md
-	screenshots/
-	vscode-logs/
-	reported-issues/
-	chat-session-log/
-	test-script.js
-```
-
-Include only artifacts relevant to that item; `vscode-logs`, `console.log`, and `test-script.js` are optional. Copy only the relevant VS Code logs or excerpts from `<TPI_ID>/user-data-dir/logs`, preserving enough of their source directory structure to identify the session and process. Each `test.md` must record:
-
-- source issue URL and test-item name;
-- origin: `TPI` or `Exploratory`;
-- research sources or hypotheses relevant to the expected behavior;
-- status: `Passed`, `Failed`, or `Blocked`;
-- tested Insiders version and commit;
-- environment and prerequisites;
-- steps performed;
-- expected result;
-- actual result;
-- relevant browser console, VS Code log, or debugger output, including the original VS Code log path;
-- deviations from the approved plan;
-- workspace-relative links to screenshots and other evidence.
-- store issue to report in `reported-issues/`
-- store the chat session log in `chat-session-log/`
-
-Finish with a concise summary in `<TPI_ID>/test-summary.md` listing every item and its status. Close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
-
-## Phase 5: Reflect and Improve
-
-In this phase, consider what went well and what could be improved in the testing process.
-- If some steps were difficult to perform in VS Code, note the specific challenges and any workarounds used. Suggest improvements to VS Code such as UI enhancements, better documentation, or additional automation support.
-- If this Skill was not clear, provide feedback on which parts were confusing or lacked sufficient detail. Suggest improvements to make the instructions more understandable and actionable.
+Finish with a concise summary in `<test-id>/test-summary.md` listing every test variation and its status. Also add timing information for each test variation. Use each test variation's `test-result.md`.

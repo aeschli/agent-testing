@@ -1,0 +1,96 @@
+{
+  "initialFiles": {
+    "agent-one.agent.md": "agent-one",
+    "agent-two.agent.md": "agent-two"
+  },
+  "01-initial": {
+    "customizations": [
+      "agent-one",
+      "agent-two"
+    ],
+    "dropdown": [
+      "agent-one",
+      "agent-two"
+    ]
+  },
+  "02-after-rename": {
+    "customizations": [
+      "agent-one",
+      "agent-two-new"
+    ],
+    "dropdown": [
+      "agent-one",
+      "agent-two-new"
+    ]
+  },
+  "afterRenameFiles": {
+    "agent-one.agent.md": "agent-one",
+    "agent-two.agent.md": "agent-two-new"
+  },
+  "03-after-create": {
+    "customizations": [
+      "agent-one",
+      "agent-three",
+      "agent-two-new"
+    ],
+    "dropdown": [
+      "agent-one",
+      "agent-three",
+      "agent-two-new"
+    ]
+  },
+  "afterCreateFiles": {
+    "agent-one.agent.md": "agent-one",
+    "agent-three.agent.md": "agent-three",
+    "agent-two.agent.md": "agent-two-new"
+  },
+  "04-after-delete": {
+    "customizations": [
+      "agent-three",
+      "agent-two-new"
+    ],
+    "dropdown": [
+      "agent-three",
+      "agent-two-new"
+    ]
+  },
+  "afterDeleteFiles": {
+    "agent-three.agent.md": "agent-three",
+    "agent-two.agent.md": "agent-two-new"
+  },
+  "05-post-reload": {
+    "customizations": [
+      "agent-three",
+      "agent-two-new"
+    ],
+    "dropdown": [
+      "agent-three",
+      "agent-two-new"
+    ]
+  },
+  "postReloadFiles": {
+    "agent-three.agent.md": "agent-three",
+    "agent-two.agent.md": "agent-two-new"
+  },
+  "executionDeviations": [
+    "Dispatched a DOM click on the virtualized built-in Agent row because pointer and keyboard activation detached or left the menu overlay open."
+  ],
+  "prompt": "What agents can you use",
+  "response": "I can use these specialized agents:\n\n- agent-three — Custom agent; use according to its configured specialization.\n- agent-two-new — Custom agent (“agent two”).\n- explore — Fast, read-only codebase exploration and research.\n- task — Runs verbose commands such as tests, builds, linting, and installs.\n- general-purpose — Handles substantial implementation and debugging tasks.\n- rubber-duck — Reviews plans or implementations for logic and design flaws.\n- code-review — Reviews code changes for high-confidence bugs.\n- research — Performs thorough web/GitHub research with verified sources.\n- security-review — Audits code for exploitable security vulnerabilities.\n\nI prefer custom agents when they fit the task and otherwise choose the narrowest specialized agent.",
+  "responseSettledAt": "2026-09-16T16:02:09.351Z",
+  "finalComparison": {
+    "backingFiles": {
+      "agent-three.agent.md": "agent-three",
+      "agent-two.agent.md": "agent-two-new",
+      ".custom\\agents\\planner.agent.md": "Planner"
+    },
+    "customizations": [
+      "agent-three",
+      "agent-two-new"
+    ],
+    "dropdown": [
+      "agent-three",
+      "agent-two-new"
+    ]
+  }
+}
