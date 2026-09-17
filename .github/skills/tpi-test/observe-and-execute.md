@@ -2,7 +2,10 @@
 
 Use these instructions only after the test plan is approved and
 `start-vscode` has launched the isolated VS Code Insiders instance. Use the
-renderer endpoint printed by the launcher.
+renderer endpoint printed by the launcher or recorded in
+`<root-dir>/launch-metadata.json`. Treat the recorded extension-host endpoint
+as the initial endpoint only; the extension host can select a different port
+after **Developer: Reload Window**.
 
 ## Unattended Execution
 
@@ -22,6 +25,8 @@ Use a two-stage workflow:
 Do not leave exploratory mutations in the measured fixture. Record both the
 automation duration and total orchestration duration; the short persisted
 script runtime does not represent selector-discovery and reset time.
+Wrap longer actions in `runStep` so the script emits `[tpi] START`, `PASS`,
+and `FAIL` progress markers with durations.
 
 Do not call `page.pause()` or `workbench.pause()` in an unattended script. Use
 accessibility roles, labels, and stable `data-*` attributes instead of deeply
@@ -53,12 +58,28 @@ connection open, reacquire the non-closed page whose URL contains
 `workbench.html`, wait for a known workbench control, and reattach console and
 error listeners if the page was replaced.
 
+`runCommand` uses F1 after dismissing transient UI, then clicks the one
+quick-pick option whose visible label exactly matches the requested command.
+Do not replace this with `Ctrl+Shift+P` or an unqualified Enter: a restored
+terminal can consume the shortcut, and the palette can include an
+`Ask in Chat` result.
+
 Use the shared helpers for:
 
 - `runCommand` to invoke workbench commands;
+- `clickExactQuickPickOption` for non-command quick picks;
+- `selectQuickPickCheckbox` for tree-style pickers such as **Create Plugin**;
 - `reacquireWorkbench` after reload or page replacement;
 - `visibleElementCount`, `visibleTexts`, and `waitForInventory` for scoped
   collection assertions;
+- `visibleCustomizationNames` and `waitForCustomizationInventory` when rows
+  include both a name and description;
+- `activeModalEditorUri` to prove the backing file of a customization opened
+  in the modal editor;
+- `captureScreenshot` with `transient: true` for menus and context views that
+  a normal Playwright screenshot dismisses;
+- `prepareHandoffSignal` and `waitForHandoffSignal` when an OS-native dialog
+  must be completed outside renderer CDP;
 - `EvidenceRecorder` for console, page-error, and failed-request evidence;
 - `runStep` for step-specific failure context and screenshots;
 - `writeRunTiming` for automation and orchestration timing.
@@ -141,6 +162,60 @@ when the approved plan requires them, and use its `shouldRecord` option to keep
 the persisted evidence relevant. Query strings and fragments are removed from
 recorded source URLs; still review evidence for sensitive values before
 preserving it.
+
+## Current customization selectors and labels
+
+Prefer observed accessible roles and names. The following selectors were
+verified against Insiders `1.139.0-insider` and should be rediscovered if the
+UI changes:
+
+- Harness buttons: `getByRole('button', { name: 'Local', exact: true })` and
+  `getByRole('button', { name: 'Copilot', exact: true })`.
+- Agents navigation: `getByRole('listitem', { name: /Agents, \d+ items/ })`.
+- Customization names: `.ai-customization-list-item .item-name`, scoped to the
+  relevant Workspace, User, Plugins, or Built-in group.
+- Chat agents: `getByRole('menuitemcheckbox')`, scoped to the visible
+  `.context-view`.
+- The personal/global group is currently labeled **User**.
+- The modal customization editor exposes its backing URI on
+  `.monaco-modal-editor-block .monaco-editor[data-uri]`.
+- **New Agent** uses separate location and filename quick picks. Verify the
+  chosen source folder and resulting URI rather than relying only on the
+  displayed agent name.
+
+## Agent Plugin workflows
+
+- **Create Plugin** uses a tree-style resource picker. Selecting an entry
+  requires clicking the entry's separate `role=checkbox`; clicking its label
+  alone does not select it. Use `selectQuickPickCheckbox`.
+- **Install from Source** opens a text prompt named
+  `owner/repo, git URL, or local folder path`. Enter the absolute local plugin
+  folder; it is not the simple folder picker used for the plugin save
+  location.
+- Plugin management can appear under the Local harness even when the packaged
+  customization is intended for Copilot. Test both the management surface and
+  the target harness, and record missing source labels or groups as product
+  behavior rather than silently switching expectations.
+- If plugin activation is ambiguous after reload, close only the isolated
+  window, relaunch the same root with `start-vscode`, and verify installed
+  state before classification. The relaunch overwrites
+  `launch-metadata.json`, so preserve earlier metadata first when both launches
+  are evidence.
+
+## Native dialog handoff
+
+Renderer CDP cannot accept every OS-native dialog. For an approved workflow
+that requires one:
+
+1. Call `prepareHandoffSignal(<root-dir>/handoff/<step>.complete)`.
+2. Emit the action through `runStep` and trigger the native dialog.
+3. Call `waitForHandoffSignal` with a bounded timeout.
+4. The runner foregrounds only the isolated VS Code window, completes the
+   native dialog, and creates the exact signal file.
+5. Resume with observable filesystem and workbench assertions.
+
+Record the handoff as a deviation. Never use a fixed sleep or terminate
+unrelated processes.
 
 ## Capture Evidence
 

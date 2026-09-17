@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import {
@@ -21,6 +21,13 @@ export interface InventoryExpectation {
 	absent?: string[];
 	exact?: string[];
 	present?: string[];
+}
+
+export interface ScreenshotOptions {
+	fullPage?: boolean;
+	retryIntervalMs?: number;
+	timeoutMs?: number;
+	transient?: boolean;
 }
 
 export interface EvidenceEntry {
@@ -152,27 +159,88 @@ export async function runCommand(
 	command: string,
 	timeoutMs = 30_000,
 ): Promise<void> {
-	await workbench.keyboard.press('Control+Shift+P');
+	await workbench.keyboard.press('Escape');
+	await workbench.keyboard.press('F1');
 	const quickInput = workbench.locator('.quick-input-widget').filter({ visible: true });
 	await quickInput.waitFor({ state: 'visible', timeout: timeoutMs });
 
 	const input = quickInput.getByRole('textbox');
 	await input.fill(`>${command}`);
-	await waitForObserved(
-		`command "${command}" to appear in the command palette`,
-		async () => visibleTexts(quickInput.getByRole('option')),
-		{
-			accept: values => values.some(value => value.includes(command)),
-			describe: values => `visible options: ${formatValue(values)}`,
-			timeoutMs,
-		},
-	);
-	await input.press('Enter');
+	await clickExactQuickPickOption(quickInput, command, timeoutMs);
 	await quickInput.waitFor({ state: 'hidden', timeout: timeoutMs }).catch(error => {
 		if (!workbench.isClosed()) {
 			throw error;
 		}
 	});
+}
+
+export async function clickExactQuickPickOption(
+	quickInput: Locator,
+	label: string,
+	timeoutMs = 30_000,
+): Promise<void> {
+	const options = quickInput.getByRole('option');
+	const selection = await waitForObserved(
+		`exact quick-pick option "${label}"`,
+		async () => {
+			const elements = await options.all();
+			const visibleOptions = await Promise.all(elements.map(async (option, index) => {
+				if (!await option.isVisible().catch(() => false)) {
+					return undefined;
+				}
+				const text = (await option.innerText().catch(() => '')).trim();
+				const hasExactLabel = await option
+					.getByText(label, { exact: true })
+					.first()
+					.isVisible()
+					.catch(() => false);
+				return {
+					hasExactLabel,
+					index,
+					text,
+				};
+			}));
+			const visible = visibleOptions.filter(
+				(value): value is NonNullable<typeof value> => value !== undefined,
+			);
+			const exact = visible.filter(value =>
+				value.hasExactLabel || value.text.split(/\r?\n/, 1)[0].trim() === label
+			);
+			return { exact, visible };
+		},
+		{
+			accept: value => value.exact.length === 1,
+			describe: value =>
+				`exact matches: ${formatValue(value.exact)}; visible options: ${formatValue(value.visible)}`,
+			timeoutMs,
+		},
+	);
+	await options.nth(selection.exact[0].index).click();
+}
+
+export async function selectQuickPickCheckbox(
+	quickInput: Locator,
+	label: string,
+	timeoutMs = 30_000,
+): Promise<void> {
+	const labelElement = quickInput.getByText(label, { exact: true }).filter({ visible: true });
+	await labelElement.waitFor({ state: 'visible', timeout: timeoutMs });
+	const entry = labelElement.locator(
+		'xpath=ancestor-or-self::*[contains(@class, "quick-input-tree-entry")][1]',
+	);
+	const checkbox = entry.getByRole('checkbox');
+	await checkbox.waitFor({ state: 'visible', timeout: timeoutMs });
+	await checkbox.click();
+	await waitForObserved(
+		`quick-pick checkbox "${label}" to be selected`,
+		async () =>
+			await checkbox.isChecked().catch(() => false)
+			|| await checkbox.getAttribute('aria-checked') === 'true',
+		{
+			accept: checked => checked,
+			timeoutMs,
+		},
+	);
 }
 
 export async function visibleElementCount(locator: Locator): Promise<number> {
@@ -195,6 +263,45 @@ export async function visibleTexts(locator: Locator): Promise<string[]> {
 	return values.filter((value): value is string => value !== undefined);
 }
 
+export async function visibleCustomizationNames(rows: Locator): Promise<string[]> {
+	const elements = await rows.all();
+	const names = await Promise.all(elements.map(async row => {
+		if (!await row.isVisible().catch(() => false)) {
+			return undefined;
+		}
+		const itemName = row.locator('.item-name').first();
+		const text = await itemName.isVisible().catch(() => false)
+			? await itemName.innerText()
+			: await row.innerText();
+		return text.split(/\r?\n/, 1)[0].trim() || undefined;
+	}));
+	return names.filter((value): value is string => value !== undefined);
+}
+
+function inventoryMatches(
+	values: string[],
+	expectation: InventoryExpectation,
+): boolean {
+	const counts = new Map<string, number>();
+	for (const value of values) {
+		counts.set(value, (counts.get(value) ?? 0) + 1);
+	}
+
+	if (expectation.present?.some(value => counts.get(value) !== 1)) {
+		return false;
+	}
+	if (expectation.absent?.some(value => counts.has(value))) {
+		return false;
+	}
+	if (expectation.exact) {
+		const actual = [...values].sort();
+		const expected = [...expectation.exact].sort();
+		return actual.length === expected.length
+			&& actual.every((value, index) => value === expected[index]);
+	}
+	return true;
+}
+
 export async function waitForInventory(
 	rows: Locator,
 	expectation: InventoryExpectation,
@@ -204,30 +311,134 @@ export async function waitForInventory(
 		'the scoped inventory to match',
 		() => visibleTexts(rows),
 		{
-			accept: values => {
-				const counts = new Map<string, number>();
-				for (const value of values) {
-					counts.set(value, (counts.get(value) ?? 0) + 1);
-				}
-
-				if (expectation.present?.some(value => counts.get(value) !== 1)) {
-					return false;
-				}
-				if (expectation.absent?.some(value => counts.has(value))) {
-					return false;
-				}
-				if (expectation.exact) {
-					const actual = [...values].sort();
-					const expected = [...expectation.exact].sort();
-					return actual.length === expected.length
-						&& actual.every((value, index) => value === expected[index]);
-				}
-				return true;
-			},
+			accept: values => inventoryMatches(values, expectation),
 			describe: values => `visible entries: ${formatValue(values)}`,
 			timeoutMs,
 		},
 	);
+}
+
+export async function waitForCustomizationInventory(
+	rows: Locator,
+	expectation: InventoryExpectation,
+	timeoutMs = 30_000,
+): Promise<string[]> {
+	return waitForObserved(
+		'the scoped customization inventory to match',
+		() => visibleCustomizationNames(rows),
+		{
+			accept: values => inventoryMatches(values, expectation),
+			describe: values => `visible customization names: ${formatValue(values)}`,
+			timeoutMs,
+		},
+	);
+}
+
+export async function activeModalEditorUri(
+	workbench: Page,
+	timeoutMs = 30_000,
+): Promise<string> {
+	return waitForObserved(
+		'an active modal editor with one backing URI',
+		async () => {
+			const editors = await workbench
+				.locator('.monaco-modal-editor-block .monaco-editor[data-uri]')
+				.all();
+			const uris = await Promise.all(editors.map(async editor =>
+				await editor.isVisible().catch(() => false)
+					? await editor.getAttribute('data-uri')
+					: undefined
+			));
+			return uris.filter((uri): uri is string => !!uri);
+		},
+		{
+			accept: uris => uris.length === 1,
+			describe: uris => `visible modal editor URIs: ${formatValue(uris)}`,
+			timeoutMs,
+		},
+	).then(uris => uris[0]);
+}
+
+export async function prepareHandoffSignal(path: string): Promise<void> {
+	await mkdir(dirname(path), { recursive: true });
+	await rm(path, { force: true });
+}
+
+export async function waitForHandoffSignal(
+	path: string,
+	description: string,
+	timeoutMs = 120_000,
+): Promise<string> {
+	console.log(`[tpi] WAIT ${description}; create signal file: ${path}`);
+	const contents = await waitForObserved(
+		`handoff signal for ${description}`,
+		() => readFile(path, 'utf8'),
+		{
+			accept: () => true,
+			describe: value => `signal contents: ${formatValue(value)}`,
+			intervalMs: 250,
+			timeoutMs,
+		},
+	);
+	console.log(`[tpi] RESUME ${description}`);
+	return contents;
+}
+
+async function withTimeout<T>(
+	action: Promise<T>,
+	timeoutMs: number,
+	description: string,
+): Promise<T> {
+	return Promise.race([
+		action,
+		delay(timeoutMs).then(() => {
+			throw new Error(`Timed out after ${timeoutMs}ms while ${description}.`);
+		}),
+	]);
+}
+
+export async function captureScreenshot(
+	workbench: Page,
+	path: string,
+	options: ScreenshotOptions = {},
+): Promise<void> {
+	const timeoutMs = options.timeoutMs ?? 15_000;
+	const retryIntervalMs = options.retryIntervalMs ?? 250;
+	const deadline = Date.now() + timeoutMs;
+	let lastError = 'no screenshot attempt completed';
+
+	await mkdir(dirname(path), { recursive: true });
+	while (Date.now() < deadline) {
+		try {
+			const remainingMs = Math.max(1, deadline - Date.now());
+			const attemptTimeoutMs = Math.min(5_000, remainingMs);
+			if (options.transient) {
+				const session = await workbench.context().newCDPSession(workbench);
+				try {
+					const result = await withTimeout(
+						session.send('Page.captureScreenshot', { format: 'png' }),
+						attemptTimeoutMs,
+						'capturing a transient CDP screenshot',
+					);
+					await writeFile(path, Buffer.from(result.data, 'base64'));
+				} finally {
+					await session.detach().catch(() => undefined);
+				}
+			} else {
+				await workbench.screenshot({
+					fullPage: options.fullPage ?? true,
+					path,
+					timeout: attemptTimeoutMs,
+				});
+			}
+			return;
+		} catch (error) {
+			lastError = describeError(error);
+			await delay(Math.min(retryIntervalMs, Math.max(0, deadline - Date.now())));
+		}
+	}
+
+	throw new Error(`Unable to capture screenshot ${path}: ${lastError}`);
 }
 
 export class EvidenceRecorder {
@@ -311,15 +522,18 @@ export async function runStep<T>(
 	screenshotsDir: string,
 	action: () => Promise<T>,
 ): Promise<T> {
+	const startedAt = Date.now();
+	console.log(`[tpi] START ${name}`);
 	try {
-		return await action();
+		const result = await action();
+		console.log(`[tpi] PASS ${name} (${Date.now() - startedAt}ms)`);
+		return result;
 	} catch (error) {
-		await mkdir(screenshotsDir, { recursive: true });
 		const safeName = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 		const screenshotPath = join(screenshotsDir, `${safeName || 'failed-step'}.png`);
-		const capturedScreenshot = await workbench
-			.screenshot({ path: screenshotPath, fullPage: true })
+		const capturedScreenshot = await captureScreenshot(workbench, screenshotPath)
 			.then(() => true, () => false);
+		console.error(`[tpi] FAIL ${name} (${Date.now() - startedAt}ms): ${describeError(error)}`);
 		throw new Error(
 			`Step "${name}" failed. ${
 				capturedScreenshot ? `Screenshot: ${screenshotPath}.` : 'Failure screenshot was unavailable.'

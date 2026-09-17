@@ -26,10 +26,13 @@ npm run start-vscode -- --root-dir <test-root-dir>
 ```
 
 The launcher prepares the isolated profile, starts the latest Insiders build,
-validates both debugger endpoints, and prints their ports and URLs. Use those
-printed values for observation and debugging. Trust the test workspace and
-dismiss first-run sign-in or onboarding dialogs before capturing test
-evidence. Confirm that the cloned profile is signed in before continuing.
+validates both debugger endpoints, prints the version, commit, build date,
+root process ID, ports, and URLs, and writes them to
+`<test-root-dir>/launch-metadata.json`. Use that file as the authoritative
+launch record. The extension-host endpoint is the initial endpoint and may
+change after a reload. Trust the test workspace and dismiss first-run sign-in
+or onboarding dialogs before capturing test evidence. Confirm that the cloned
+profile is signed in before continuing.
 If the source session has expired, ask the user to refresh it in the source
 profile rather than signing into the isolated test profile.
 
@@ -58,6 +61,7 @@ Store each test item's evidence using this layout:
   screenshots/
   vscode-logs/
   reported-issues/
+  launch-metadata.json
   test-result.md
   test-script.mts
 ```
@@ -73,6 +77,7 @@ record:
 - research sources or hypotheses relevant to the expected behavior;
 - status: `Passed`, `Failed`, or `Blocked`;
 - tested Insiders version and commit;
+- the relative link to `launch-metadata.json`;
 - environment and prerequisites;
 - steps performed;
 - expected result;
@@ -82,7 +87,11 @@ record:
 - test-variation-relative links to screenshots and other evidence;
 - issues to report in `reported-issues/`.
 
-When done, close the isolated Insiders window and any inspector sessions started by this workflow, but do not terminate unrelated VS Code or Node processes.
+When done, close the isolated Insiders window and any inspector sessions
+started by this workflow, but do not terminate unrelated VS Code or Node
+processes. If a clean relaunch is required for recovery, reuse the same test
+root and verify persisted state before continuing; record the relaunch and
+preserve the relevant launch metadata.
 
 ### 4: Reflect and Improve
 

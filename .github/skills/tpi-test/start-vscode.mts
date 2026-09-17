@@ -403,8 +403,10 @@ async function main(): Promise<void> {
 	createInitialSettings(userDataDir, outputRoot);
 
 	const reservation = await reserveDebugPorts(options);
+	const launchedAt = new Date().toISOString();
+	let launch;
 	try {
-		await launchCodeInsiders([
+		launch = await launchCodeInsiders([
 			'--user-data-dir', userDataDir,
 			'--extensions-dir', extensionsDir,
 			'--shared-data-dir', sharedDataDir,
@@ -423,6 +425,38 @@ async function main(): Promise<void> {
 		reservation.rendererPort,
 		reservation.extensionHostPort,
 	);
+
+	const launchMetadataPath = join(outputRoot, 'launch-metadata.json');
+	const launchMetadata = {
+		schemaVersion: 1,
+		channel: 'insiders',
+		version: launch.version,
+		commit: launch.commit,
+		buildDate: launch.buildDate,
+		architecture: launch.architecture,
+		executablePath: launch.executablePath,
+		processId: launch.processId,
+		launchedAt,
+		rootDir: outputRoot,
+		renderer: {
+			port: reservation.rendererPort,
+			endpoint: `http://127.0.0.1:${reservation.rendererPort}`,
+		},
+		extensionHost: {
+			port: reservation.extensionHostPort,
+			endpoint: `http://127.0.0.1:${reservation.extensionHostPort}`,
+			note: 'This is the initial endpoint; the extension host can select another port after reload.',
+		},
+	};
+	writeFileSync(
+		launchMetadataPath,
+		`${JSON.stringify(launchMetadata, undefined, 2)}\n`,
+	);
+	console.log(`VS Code Insiders version: ${launch.version}`);
+	console.log(`VS Code Insiders commit: ${launch.commit}`);
+	console.log(`VS Code Insiders build date: ${launch.buildDate}`);
+	console.log(`VS Code Insiders root process ID: ${launch.processId}`);
+	console.log(`Launch metadata: ${launchMetadataPath}`);
 }
 
 main().catch(error => {
