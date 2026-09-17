@@ -1,0 +1,5 @@
+Source: user-data-dir/logs/20260917T103852/window1/exthost/exthost.log
+
+2026-09-17 10:38:54.737 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+
+No plugin parsing or custom-agent discovery error was logged in the inspected renderer, extension-host, or Copilot logs.

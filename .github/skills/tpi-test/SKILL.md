@@ -47,7 +47,7 @@ an Insiders profile for GitHub sign-in and resumes after that window closes.
 ### Create Isolated Directories
 
 Create a folder named `<test-id>` in the current workspace without deleting
-existing evidence. Each test item will use an isolated root at
+existing evidence. Each test variation will use an isolated root at
 `<test-id>/<test-variation-name>/`.
 
 Reuse an existing issue directory only when continuing the same test run. Otherwise, ask before overwriting files from an earlier run.
@@ -60,9 +60,7 @@ Design a focused set of tests rather than mechanically copying the issue steps. 
 - primary workflow and expected successful outcome;
 - meaningful input, file-type, language, setting, or configuration variations;
 - boundary, empty, invalid, unavailable, cancellation, and recovery behavior;
-- repeated use, state persistence, reload, restart, and workspace transitions;
 - interaction with adjacent commands, views, keybindings, extensions, or platform behavior;
-- keyboard operation, focus, accessibility labels, and visible feedback for UI features;
 - likely regression paths identified from linked changes, source code, or existing tests.
 
 Do not add variations only to inflate the test count. Prioritize cases by user impact, likelihood of failure, and the change's implementation risk. Keep exploratory work bounded with a clear charter, evidence to collect, and stopping condition. If research does not establish an expected result, label the case as exploratory and describe the behavior being investigated rather than inventing a requirement.
@@ -87,14 +85,22 @@ Present the plan to the user and explicitly ask for approval. **Stop here. Do no
 
 ## Phase 4: Coordinate Testing
 
-Run each test variation as an independently managed subsession.
-If a tool for running a subsession is available, use it; otherwise, use a subagent.
+We run each test variation as an independent subsession.
 
-Ensure that each test variation run has its setup, execution, and teardown properly handled.
+Each subsession operates independently, maintaining its own state and context throughout the test variation.
 
-Instructions for a subsession can be found in [Test Variation Run Instructions](./test-variation-run-instructions.md)
+Each subsession has its own root directory within the test structure:  `<test-root-dir>` at (`<test-id>/<test-variation-name>/`);
 
-Provide each subsession with this document, its `<test-root-dir>`, and the necessary context, including what to test, the test plan, the test variation name, setup instructions, and any relevant dependencies.
+Write the subsession's test plan, including setup, execution, and teardown steps, in its `<test-root-dir>/test-plan.md`.
+
+Instructions for the subsessions can be found in [Test Variation Run Instructions](./test-variation-run-instructions.md)
+
+Provide each subsession with this document, its `<test-root-dir>`, its test plan, the test variation name, setup instructions, and any relevant dependencies.
+
+Instruct each subsession to record important decisions, blockers, commands,
+and evidence in its `<test-root-dir>/test-result.md`. Treat this file as the authoritative record of the test variation.
+
+Run the subsessions in sequence.
 
 Every 60 seconds:
 
@@ -103,10 +109,6 @@ Every 60 seconds:
   `<test-root-dir>/chat-session-log/`. Treat these files as progress snapshots,
   not guaranteed complete raw session transcripts;
 - give a status update on the progress of each subsession.
-
-Instruct each subsession to record important decisions, blockers, commands,
-and evidence in its `test-result.md`. Treat this file as the authoritative
-record of the test variation.
 
 ## Phase 5: Conclude
 

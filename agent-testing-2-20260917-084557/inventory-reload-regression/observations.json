@@ -1,0 +1,48 @@
+{
+  "playwrightInventoryObservations": [
+    {
+      "step": "initial",
+      "customizations": ["agent-one", "agent-two"],
+      "customizationsCount": 2,
+      "chatDropdown": ["agent-one", "agent-two"],
+      "chatDropdownCount": 2
+    },
+    {
+      "step": "after-rename",
+      "customizations": ["agent-one", "agent-two-new"],
+      "customizationsCount": 2,
+      "chatDropdown": ["agent-one", "agent-two-new"],
+      "chatDropdownCount": 2
+    },
+    {
+      "step": "after-create",
+      "customizations": ["agent-one", "agent-two-new", "agent-three"],
+      "customizationsCount": 3,
+      "chatDropdown": ["agent-one", "agent-two-new", "agent-three"],
+      "chatDropdownCount": 3
+    },
+    {
+      "step": "before-reload",
+      "customizations": ["agent-two-new", "agent-three"],
+      "customizationsCount": 2,
+      "chatDropdown": ["agent-two-new", "agent-three"],
+      "chatDropdownCount": 2
+    },
+    {
+      "step": "after-reload",
+      "customizations": ["agent-two-new", "agent-three"],
+      "customizationsCount": 2,
+      "chatDropdown": ["agent-two-new", "agent-three"],
+      "chatDropdownCount": 2
+    }
+  ],
+  "postReloadBackingFiles": [
+    "agent-two.agent.md",
+    "agent-three.agent.md"
+  ],
+  "absentAfterReload": [
+    "agent-one",
+    "agent-two"
+  ],
+  "duplicateEntriesAfterReload": []
+}

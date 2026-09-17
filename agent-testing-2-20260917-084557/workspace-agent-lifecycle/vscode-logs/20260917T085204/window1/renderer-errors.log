@@ -1,0 +1,13 @@
+Source: user-data-dir/logs/20260917T085204/window1/renderer.log
+
+2026-09-17 08:52:12.114 [error] [Extension Host] (node:86360) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-17 08:52:42.594 [error] [Extension Host] Failed to fetch remote embeddings cache from https://embeddings.vscode-cdn.net/text-3-small/v1.139/commands/latest.txt
+2026-09-17 08:52:42.596 [error] [Extension Host] Response status: 404, status text:
+2026-09-17 08:52:43.157 [error] [Extension Host] Failed to fetch remote embeddings cache from https://embeddings.vscode-cdn.net/text-3-small/v1.139/commands/core.json
+2026-09-17 08:52:43.158 [error] [Extension Host] Response status: 404, status text:
+2026-09-17 09:10:05.191 [error] [Extension Host] Failed to fetch remote embeddings cache from https://embeddings.vscode-cdn.net/text-3-small/v1.139/settings/latest.txt
+2026-09-17 09:10:05.196 [error] [Extension Host] Response status: 404, status text:
+2026-09-17 09:10:05.677 [error] [Extension Host] Failed to fetch remote embeddings cache from https://embeddings.vscode-cdn.net/text-3-small/v1.139/settings/core.json
+2026-09-17 09:10:05.678 [error] [Extension Host] Response status: 404, status text:
+
+Assessment: These startup/dependency warnings and remote embeddings-cache 404s were unrelated to the workspace-agent lifecycle. No corresponding browser-console errors or lifecycle failures were observed during the successful measured run.

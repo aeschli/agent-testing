@@ -1,0 +1,12 @@
+[
+  "Root README.md opened successfully.",
+  "Chat harness explicitly changed from Local to Copilot.",
+  "Copilot Customizations showed exactly agent-one and agent-two in Workspace.",
+  "Renaming only the frontmatter name replaced agent-two with agent-two-new in Customizations.",
+  "Chat agent picker replaced agent-two with agent-two-new without duplicates.",
+  "Created agent-three with valid frontmatter; Customizations showed it exactly once.",
+  "Chat agent picker showed agent-three exactly once.",
+  "Accepted the Explorer deletion confirmation to move agent-one.agent.md to the Recycle Bin.",
+  "agent-one backing file was deleted and Customizations retained only the other two agents.",
+  "Chat agent picker removed agent-one and retained exactly agent-two-new and agent-three."
+]

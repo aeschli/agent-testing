@@ -1,0 +1,17 @@
+{
+  "workspaceAgentSource": "---\nname: plugin-agent\ndescription: Agent plugin discovery test fixture\n---\n\nYou are the plugin-agent test agent.\n",
+  "workspaceAgentCreated": true,
+  "generatedStructure": {
+    "pluginJson": {
+      "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+      "name": "tpi-agent-plugin",
+      "version": "1.0.0",
+      "description": ""
+    },
+    "pluginAgentRelativePath": "com.github.copilot/agents/plugin-agent.agent.md",
+    "sourceMatchesExactly": true
+  },
+  "installedPluginsPage": [
+    "Agent Customizations(Local · workspace)\nOverview\nPlugins\n1\nMCP Servers\nSkills\n13\nInstructions\nAgents\n4\nHooks\nPrompts\n7\nPlugins\n\nExtend your AI agent with plugins that add commands, skills, agents, hooks, and MCP servers from reusable packages. Learn more about agent plugins\n\nInstalled\n1\nCreate Plugin\ntpi-agent-plugin\nLocal\nAvailable\n178\nBrowse and install plugins from your marketplaces.\nInstall from Source\nworkiq\nQuery Microsoft 365 data with natural language — emails, meetings, documents, Teams messages, and more.\nInstall"
+  ]
+}

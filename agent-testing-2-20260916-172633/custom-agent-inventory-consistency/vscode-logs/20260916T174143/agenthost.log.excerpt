@@ -1,5 +1,0 @@
-Original log:
-C:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260916-172633\custom-agent-inventory-consistency\user-data-dir\logs\20260916T174143\agenthost.log
-
-2026-09-16 18:01:33.587 [info] [Copilot:6e08d8ea-183a-4ef9-9efa-c8149f565344] sendMessage called: "What agents can you use" (0 attachments)
-2026-09-16 18:01:33.591 [info] [Copilot:6e08d8ea-183a-4ef9-9efa-c8149f565344] rpc.mode.set succeeded: mode=interactive

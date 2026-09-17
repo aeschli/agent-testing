@@ -1,14 +1,16 @@
 {
   "scripts": {
+    "computer-use": "computer-use-mcp",
     "setup-authenticated-user-data": "node .github/skills/tpi-test/setup-authenticated-user-data.mts",
     "start-vscode": "node .github/skills/tpi-test/start-vscode.mts",
     "typecheck:tpi-test": "tsc --project .github/skills/tpi-test/tsconfig.json"
   },
   "devDependencies": {
+    "@hediet/dbgjs": "^0.1.0",
     "@types/node": "^26.5.1",
     "@vscode/test-electron": "^3.1.0",
+    "computer-use-mcp": "^1.8.0",
     "playwright": "^1.63.0",
-    "typescript": "^7.0.2",
-    "@hediet/dbgjs": "^0.1.0"
+    "typescript": "^7.0.2"
   }
 }

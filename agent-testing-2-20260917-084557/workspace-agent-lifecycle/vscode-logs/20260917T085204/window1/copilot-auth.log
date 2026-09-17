@@ -1,0 +1,7 @@
+Source: user-data-dir/logs/20260917T085204/window1/exthost/GitHub.copilot-chat/GitHub Copilot Chat.log
+
+2026-09-17 08:52:14.512 [info] Logged in to GitHub Copilot.
+2026-09-17 08:52:14.512 [info] Copilot Chat: 0.67.2026091702, VS Code: 1.139.0-insider
+2026-09-17 08:52:22.337 [info] Copilot token acquired.
+
+Assessment: The isolated profile had an authenticated Copilot session before the measured workflow.

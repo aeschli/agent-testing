@@ -1,6 +1,0 @@
-Original log:
-C:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260916-172633\custom-agent-inventory-consistency\user-data-dir\logs\20260916T174143\window1\renderer.log
-
-2026-09-16 18:01:07.768 [error] Error: Aborted onWillSaveTextDocument-event after 1750ms
-2026-09-16 18:01:15.968 [warning] No harness descriptor found for session type agent-host-copilotcli
-2026-09-16 18:01:21.684 [error] [Extension Host] (node:95012) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.

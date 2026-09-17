@@ -1,0 +1,20 @@
+{
+  "targetPath": "C:\\Users\\martinae\\.copilot\\agents\\user-agent.agent.md",
+  "createdTarget": true,
+  "authenticatedWorkbench": true,
+  "customizations": {
+    "userInventory": [
+      "user-agent"
+    ],
+    "workspaceInventory": []
+  },
+  "openedBackingFile": {
+    "resourceUri": "file:///c%3A/Users/martinae/.copilot/agents/user-agent.agent.md"
+  },
+  "chatAgentMenu": [
+    "Agent\nCtrl+Shift+I",
+    "user-agent",
+    "Configure Custom Agents..."
+  ],
+  "chatAgentSelectable": true
+}

@@ -1,0 +1,10 @@
+{
+  "automationDurationMs": 124942,
+  "automationEndedAt": "2026-09-17T08:57:02.228Z",
+  "automationStartedAt": "2026-09-17T08:54:57.286Z",
+  "orchestrationDurationMs": 586108,
+  "orchestrationStartedAt": "2026-09-17T08:47:16.120Z",
+  "discoveryBoundDurationMs": 123577,
+  "discoveryStartedAt": "2026-09-17T08:54:58.651Z",
+  "fiveMinuteBoundMs": 300000
+}

@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automate TPI Testing</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --blue: #58a6ff;
+      --cyan: #39d0d8;
+      --green: #55d187;
+      --amber: #f5bb45;
+      --muted: #526074;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #ffffff;
+      color: #172033;
+    }
+
+    button { font: inherit; }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-height: 520px;
+      isolation: isolate;
+    }
+
+    .deck::before,
+    .deck::after {
+      position: absolute;
+      z-index: -1;
+      width: 42vw;
+      height: 42vw;
+      border-radius: 50%;
+      content: "";
+      filter: blur(100px);
+      opacity: .12;
+    }
+
+    .deck::before {
+      top: -20vw;
+      right: -8vw;
+      background: var(--blue);
+    }
+
+    .deck::after {
+      bottom: -24vw;
+      left: -12vw;
+      background: var(--cyan);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(20px, 4vh, 44px);
+      padding: clamp(34px, 6vw, 88px);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity .42s ease, transform .42s ease, visibility .42s;
+    }
+
+    .slide.active {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      color: var(--cyan);
+      font-size: clamp(12px, 1.2vw, 16px);
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 28px;
+      height: 2px;
+      background: currentColor;
+      content: "";
+    }
+
+    h1, h2, p { margin: 0; }
+
+    h1 {
+      max-width: 950px;
+      font-size: clamp(48px, 7.2vw, 104px);
+      line-height: .96;
+      letter-spacing: -.055em;
+    }
+
+    h2 {
+      font-size: clamp(38px, 5.3vw, 72px);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .accent {
+      color: transparent;
+      background: linear-gradient(100deg, var(--blue), var(--cyan));
+      background-clip: text;
+    }
+
+    .hero {
+      align-self: center;
+      display: grid;
+      gap: clamp(28px, 5vh, 54px);
+    }
+
+    .flow-slide {
+      grid-template-rows: 1fr auto;
+    }
+
+    .flow-slide .hero {
+      align-self: stretch;
+      align-content: center;
+    }
+
+    .subtitle {
+      max-width: 920px;
+      color: #344258;
+      font-size: clamp(30px, 3.4vw, 48px);
+      font-weight: 650;
+      line-height: 1.3;
+    }
+
+    .flow-slide h1 + .subtitle {
+      margin-top: clamp(16px, 2.5vh, 28px);
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: workflow-step;
+    }
+
+    .step {
+      position: relative;
+      min-height: 58px;
+      padding: 8px 0 10px 62px;
+      counter-increment: workflow-step;
+    }
+
+    .step::before {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 0 0 5px rgba(88,166,255,.1);
+      color: #ffffff;
+      content: counter(workflow-step);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .step::after {
+      position: absolute;
+      top: 42px;
+      bottom: -8px;
+      left: 20px;
+      width: 2px;
+      background: linear-gradient(var(--cyan), rgba(88,166,255,.18));
+      content: "";
+    }
+
+    .step:last-child::after { display: none; }
+
+    .highlight {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .step span {
+      position: relative;
+      z-index: 1;
+      color: #344258;
+      font-size: clamp(18px, 1.7vw, 25px);
+      line-height: 1.4;
+    }
+
+    .challenge-layout {
+      align-self: center;
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: clamp(32px, 6vw, 84px);
+      align-items: center;
+    }
+
+    .metric {
+      margin-top: 38px;
+      padding-left: 22px;
+      border-left: 3px solid var(--amber);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(54px, 8vw, 104px);
+      line-height: .85;
+      letter-spacing: -.06em;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 17px;
+      align-items: start;
+      padding: 20px 22px;
+      border: 1px solid #dfe7f2;
+      border-radius: 16px;
+      background: rgba(247,250,254,.9);
+    }
+
+    .icon {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border-radius: 12px;
+      font-weight: 850;
+    }
+
+    .done .icon { color: var(--green); background: rgba(85,209,135,.12); }
+    .progress .icon { color: var(--amber); background: rgba(245,187,69,.12); }
+
+    .status strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: clamp(16px, 1.4vw, 20px);
+    }
+
+    .status p {
+      color: var(--muted);
+      font-size: clamp(14px, 1.15vw, 17px);
+      line-height: 1.42;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #748298;
+      font-size: 13px;
+      letter-spacing: .04em;
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 10;
+      right: clamp(24px, 4vw, 60px);
+      bottom: clamp(22px, 4vh, 40px);
+      display: flex;
+      gap: 8px;
+    }
+
+    .controls button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid #d5deea;
+      border-radius: 50%;
+      color: #172033;
+      background: #f5f8fc;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+
+    .controls button:hover { background: rgba(88,166,255,.18); transform: translateY(-2px); }
+    .controls button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+    .progress-bar {
+      position: fixed;
+      z-index: 10;
+      inset: auto 0 0;
+      height: 3px;
+      background: #e8edf4;
+    }
+
+    .progress-bar span {
+      display: block;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width .42s ease;
+    }
+
+    @media (max-width: 760px) {
+      .slide { padding: 28px 24px 72px; }
+      .workflow { grid-template-columns: 1fr; }
+      .step { padding-left: 52px; }
+      .challenge-layout { grid-template-columns: 1fr; gap: 28px; }
+      .metric { margin-top: 20px; }
+      .metric strong { font-size: 58px; }
+      .status { padding: 14px; }
+      .footer span:first-child { display: none; }
+    }
+
+    @media (max-height: 700px) {
+      .slide { gap: 16px; padding-top: 28px; }
+      .hero { gap: 24px; }
+      .step { min-height: 112px; padding: 18px; }
+      .status { padding: 14px 18px; }
+      .metric { margin-top: 22px; }
+    }
+
+    @media (max-width: 760px) and (max-height: 700px) {
+      .slide {
+        gap: 10px;
+        padding: 18px 24px 58px;
+      }
+
+      h1 { font-size: 42px; }
+      h2 { font-size: 36px; }
+      .subtitle { font-size: 16px; }
+      .hero { gap: 12px; }
+      .workflow { gap: 4px; }
+
+      .step {
+        min-height: 44px;
+        padding: 3px 0 5px 46px;
+      }
+
+      .step span { font-size: 15px; }
+      .step::before { width: 32px; height: 32px; font-size: 13px; }
+      .step::after { top: 32px; bottom: -4px; left: 15px; }
+      .challenge-layout { gap: 16px; }
+      .metric { margin-top: 12px; }
+      .metric strong { font-size: 48px; }
+      .metric span { margin-top: 6px; font-size: 13px; }
+      .status-list { gap: 8px; }
+      .status { grid-template-columns: 34px 1fr; gap: 10px; padding: 9px 12px; }
+      .icon { width: 32px; height: 32px; }
+      .status strong { margin-bottom: 2px; font-size: 14px; }
+      .status p { font-size: 12px; }
+      .controls { bottom: 10px; }
+      .controls button { width: 36px; height: 36px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .progress-bar span, .controls button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide flow-slide active" aria-label="Automated testing">
+      <div class="hero">
+        <div>
+          <h1>Automate <span class="accent">TPI Testing</span></h1>
+          <p class="subtitle">Skill that runs a test plan item</p>
+        </div>
+        <ol class="workflow" aria-label="Automated testing workflow">
+          <li class="step">
+            <span>Creates a <strong class="highlight">test plan</strong> with targeted variations</span>
+          </li>
+          <li class="step"><span>Runs a dedicated <strong class="highlight">subagent or subsession for each variation</strong></span></li>
+          <li class="step"><span>Launches every test in a <strong class="highlight">separate, isolated VS Code instance</strong> observed through <strong class="highlight">Playwright</strong> and the <strong class="highlight">debugger</strong></span></li>
+          <li class="step"><span>Tracks <strong class="highlight">progress, logs, workspace state, user data, chat session logs, timing, and screenshots</strong></span></li>
+          <li class="step"><span>Reports <strong class="highlight">test results and discovered issues</strong></span></li>
+          <li class="step"><span>Recommends <strong class="highlight">improvements</strong> to the test scripts and the skill itself</span></li>
+        </ol>
+      </div>
+      <footer class="footer"><span>Reliable · isolated · observable</span></footer>
+    </section>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+2026-09-17 09:21:47.421 [info] Extension host with pid 77860 started
+2026-09-17 09:21:47.421 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:21:47.999 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:21:48.713 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:21:49.858 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatParticipant:github.copilot.editsAgent'
+2026-09-17 09:21:54.911 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:json'
+2026-09-17 09:21:55.154 [info] ExtensionService#_doActivateExtension vscode.extension-editing, startup: false, activationEvent: 'onLanguage:json'
+2026-09-17 09:21:55.920 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:json'
+2026-09-17 09:21:56.980 [info] ExtensionService#_doActivateExtension vscode.npm, startup: false, activationEvent: 'onLanguage:json'
+2026-09-17 09:21:57.222 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-09-17 09:21:57.331 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2026-09-17 09:22:00.139 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-09-17 09:22:01.132 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-09-17 09:22:02.037 [info] Eager extensions activated
+2026-09-17 09:22:02.371 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:22:02.421 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:27:03.044 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:27:03.086 [info] Extension host with pid 77860 exiting with code 0
+2026-09-17 09:27:05.507 [info] Extension host with pid 89964 started
+2026-09-17 09:27:05.508 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:27:05.856 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:27:05.898 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:27:05.933 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatParticipant:github.copilot.editsAgent'
+2026-09-17 09:27:07.738 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-09-17 09:27:07.843 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2026-09-17 09:27:08.553 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-09-17 09:27:08.662 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-09-17 09:27:08.990 [info] Eager extensions activated
+2026-09-17 09:27:09.152 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:27:09.162 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:28:12.503 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:28:12.542 [info] Extension host with pid 89964 exiting with code 0
+2026-09-17 09:28:14.277 [info] Extension host with pid 96080 started
+2026-09-17 09:28:14.278 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:28:14.502 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:28:14.542 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:28:14.574 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:28:16.322 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:28:16.327 [info] Extension host with pid 96080 exiting with code 0
+2026-09-17 09:28:17.139 [info] Extension host with pid 101504 started
+2026-09-17 09:28:17.139 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:28:17.297 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:28:17.341 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:28:17.372 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:28:18.969 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-09-17 09:28:19.431 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2026-09-17 09:28:19.517 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-09-17 09:28:19.612 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-09-17 09:28:19.715 [info] ExtensionService#_doActivateExtension vscode.markdown-language-features, startup: false, activationEvent: 'onLanguage:chatagent'
+2026-09-17 09:28:22.674 [info] Eager extensions activated
+2026-09-17 09:28:22.956 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:28:22.960 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:28:23.328 [info] ExtensionService#_doActivateExtension vscode.markdown-math, startup: false, activationEvent: 'api', root cause: vscode.markdown-language-features
+2026-09-17 09:28:23.596 [info] ExtensionService#_doActivateExtension vscode.mermaid-markdown-features, startup: false, activationEvent: 'api', root cause: vscode.markdown-language-features
+2026-09-17 09:29:54.123 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:29:54.147 [info] Extension host with pid 101504 exiting with code 0
+2026-09-17 09:29:55.914 [info] Extension host with pid 99636 started
+2026-09-17 09:29:55.914 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:29:56.153 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:29:56.199 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:29:56.231 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:29:58.266 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:29:58.269 [info] Extension host with pid 99636 exiting with code 0
+2026-09-17 09:29:58.595 [info] Extension host with pid 100460 started
+2026-09-17 09:29:58.596 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:29:58.700 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:29:58.757 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:29:58.783 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:30:00.221 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-09-17 09:30:00.528 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2026-09-17 09:30:00.856 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-09-17 09:30:00.938 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-09-17 09:30:01.195 [info] Eager extensions activated
+2026-09-17 09:30:01.437 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:30:01.441 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:30:09.878 [info] ExtensionService#_doActivateExtension vscode.markdown-language-features, startup: false, activationEvent: 'onLanguage:chatagent'
+2026-09-17 09:31:11.280 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:31:11.301 [info] Extension host with pid 100460 exiting with code 0
+2026-09-17 09:31:12.928 [info] Extension host with pid 10964 started
+2026-09-17 09:31:12.928 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:31:13.194 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:31:13.238 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:31:13.277 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:31:15.585 [info] Extension host terminating: received terminate message from renderer
+2026-09-17 09:31:15.590 [info] Extension host with pid 10964 exiting with code 0
+2026-09-17 09:31:15.667 [info] Extension host with pid 84696 started
+2026-09-17 09:31:15.667 [info] Skipping acquiring lock for c:\Users\martinae\workspaces\agent-testing\agent-testing-2-20260917-084557\user-agent-discovery\user-data-dir\User\workspaceStorage\a95afda454d8ccf6cfa61b3827aa1dd0.
+2026-09-17 09:31:15.780 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2026-09-17 09:31:15.820 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2026-09-17 09:31:15.853 [info] ExtensionService#_doActivateExtension GitHub.copilot-chat, startup: false, activationEvent: 'onChatSession:copilotcli'
+2026-09-17 09:31:17.283 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+2026-09-17 09:31:17.562 [info] ExtensionService#_doActivateExtension vscode.microsoft-authentication, startup: false, activationEvent: 'onAuthenticationRequest:microsoft'
+2026-09-17 09:31:17.897 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+2026-09-17 09:31:18.009 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2026-09-17 09:31:18.208 [info] Eager extensions activated
+2026-09-17 09:31:18.432 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:31:18.438 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2026-09-17 09:31:20.942 [info] ExtensionService#_doActivateExtension vscode.markdown-language-features, startup: false, activationEvent: 'onLanguage:chatagent'

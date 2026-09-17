@@ -1,0 +1,224 @@
+[
+  {
+    "message": "%c WARN color: #993 No harness descriptor found for session type agent-host-copilotcli",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T08:55:01.849Z",
+    "type": "console"
+  },
+  {
+    "message": "%c  ERR color: #f33 [AHPLog] Failed to write transport log ma: Unable to write file 'c:\\Users\\martinae\\workspaces\\agent-testing\\agent-testing-2-20260917-084557\\inventory-reload-regression\\user-data-dir\\logs\\20260917T104717\\ahp\\ahp-da7d38615ebe2a5503f53a956935706bbbb54bc9-2026-09-17T08-47-19-219Z-53eb1cbb-1f9b-4acc-81a0-036949fb5de9.jsonl' (Canceled: Canceled)\n    at Mge.writeFile (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5182:91605)\n    at async n (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:3109:701)\n    at async Ppe._drainPending (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:3109:989)",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T08:55:01.998Z",
+    "type": "console"
+  },
+  {
+    "message": "Error: Trying to add a disposable to a DisposableMap that has already been disposed of. The added object will be leaked!\n    at Ct.set (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:28:4379)\n    at n6e.sync (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:3642:63993)",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T08:55:01.999Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-explicit-cwd/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.620Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/http-basic/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.621Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/stdio-basic/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.621Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/spaces-and-unicode%20%CE%A9/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.622Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/equivalent/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.622Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-dev-mode/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.623Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/requires-input/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.623Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/same-name/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.687Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-workspace-variable/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.688Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/long-server-name-for-checking-label-truncation-and-focus/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.688Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-env-file/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.689Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/leave-unselected/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.690Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-sse-transport/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.701Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-sandbox/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.702Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-version-metadata/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.703Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/uses-oauth-config/versions/latest",
+    "timestamp": "2026-09-17T08:55:05.703Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/spaces-and-unicode%20%CE%A9",
+    "timestamp": "2026-09-17T08:55:05.787Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-explicit-cwd",
+    "timestamp": "2026-09-17T08:55:05.788Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/stdio-basic",
+    "timestamp": "2026-09-17T08:55:05.790Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-dev-mode",
+    "timestamp": "2026-09-17T08:55:05.790Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/http-basic",
+    "timestamp": "2026-09-17T08:55:05.799Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/requires-input",
+    "timestamp": "2026-09-17T08:55:05.800Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/equivalent",
+    "timestamp": "2026-09-17T08:55:05.801Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/same-name",
+    "timestamp": "2026-09-17T08:55:05.835Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-env-file",
+    "timestamp": "2026-09-17T08:55:05.835Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/leave-unselected",
+    "timestamp": "2026-09-17T08:55:05.836Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-sandbox",
+    "timestamp": "2026-09-17T08:55:05.837Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-oauth-config",
+    "timestamp": "2026-09-17T08:55:05.891Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-sse-transport",
+    "timestamp": "2026-09-17T08:55:05.891Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-workspace-variable",
+    "timestamp": "2026-09-17T08:55:05.892Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/uses-version-metadata",
+    "timestamp": "2026-09-17T08:55:05.892Z",
+    "type": "console"
+  },
+  {
+    "message": "Failed to load resource: the server responded with a status of 404 ()",
+    "source": "https://api.mcp.github.com/v0.1/servers/by-name/long-server-name-for-checking-label-truncation-and-focus",
+    "timestamp": "2026-09-17T08:55:05.893Z",
+    "type": "console"
+  },
+  {
+    "message": "%c  ERR color: #f33 [Extension Host] (node:94908) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `Code - Insiders --trace-deprecation ...` to show where the warning was created)",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T08:55:07.666Z",
+    "type": "console"
+  },
+  {
+    "message": "%c[Extension Host] %c(node:94908) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `Code - Insiders --trace-deprecation ...` to show where the warning was created) %c(at file:///c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:296:30745) color: blue color:  color: grey",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T08:55:07.666Z",
+    "type": "console"
+  }
+]

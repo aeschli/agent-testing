@@ -1,0 +1,32 @@
+[
+  {
+    "message": "%c WARN color: #993 [chat-stt] could not refresh GitHub session state for cloud dictation Canceled: Canceled\n    at sC (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:8:1620)\n    at vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5223:47399\n    at Array.forEach (<anonymous>)\n    at s.dispose (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5223:47307)\n    at Y2.dispose (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5223:60647)\n    at sCo.dispose (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5230:10470)\n    at rCo.stopAllInReverse (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5230:9610)\n    at async dPt._doStopExtensionHosts (vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js:5229:22900)",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T07:31:13.841Z",
+    "type": "console"
+  },
+  {
+    "message": "%c WARN color: #993 [DefaultAccount] Attempt 1 to get sessions failed: Canceled",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T07:31:13.842Z",
+    "type": "console"
+  },
+  {
+    "message": "%c[Extension Host] %cProvided debugging port 58634 is not free, using 60682 instead. color: blue color:",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T07:31:14.797Z",
+    "type": "console"
+  },
+  {
+    "message": "%c  ERR color: #f33 [Extension Host] (node:84696) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `Code - Insiders --trace-deprecation ...` to show where the warning was created)",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T07:31:18.915Z",
+    "type": "console"
+  },
+  {
+    "message": "%c[Extension Host] %c(node:84696) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.\n(Use `Code - Insiders --trace-deprecation ...` to show where the warning was created) %c(at file:///c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:296:30745) color: blue color:  color: grey",
+    "source": "vscode-file://vscode-app/c:/Users/martinae/workspaces/agent-testing/.vscode-test/vscode-win32-x64-archive-insiders/0469440342/resources/app/out/vs/workbench/workbench.desktop.main.js",
+    "timestamp": "2026-09-17T07:31:18.916Z",
+    "type": "console"
+  }
+]

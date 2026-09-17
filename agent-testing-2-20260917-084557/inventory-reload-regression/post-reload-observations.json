@@ -1,0 +1,26 @@
+{
+  "backingFiles": [
+    "agent-three.agent.md",
+    "agent-two.agent.md"
+  ],
+  "observations": [
+    {
+      "inventory": [
+        "agent-three",
+        "agent-two-new"
+      ],
+      "step": "after-reload",
+      "surface": "Customizations",
+      "timestamp": "2026-09-17T08:56:50.458Z"
+    },
+    {
+      "inventory": [
+        "agent-three",
+        "agent-two-new"
+      ],
+      "step": "after-reload",
+      "surface": "Chat dropdown",
+      "timestamp": "2026-09-17T08:56:50.822Z"
+    }
+  ]
+}

@@ -1,10 +1,10 @@
-These instructions guide a subsession on how to perform their tasks, including launching the isolated TPI instance, observing and executing test items, and recording results.
+These instructions guide a test runner session on how to perform their tasks, including launching the isolated TPI instance, observing and executing test items, and recording results.
 
-A subsession should get these instructions along with
+The test runner session should get these instructions along with
 - instructions what to test. That can be a reference to the test plan along with the name of the variation to test.
 - the <test-root-dir> which is used as working directory and where results are stored.
 
-Each subsession has an isolated `<test-root-dir>` located at
+Each test runner session has an isolated `<test-root-dir>` located at
 `<test-id>/<test-variation-name>/`. The launcher creates this structure:
 
 ```text

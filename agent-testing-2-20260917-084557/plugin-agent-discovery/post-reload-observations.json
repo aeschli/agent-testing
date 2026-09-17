@@ -1,0 +1,28 @@
+{
+  "copilotAgentsAfterReload": [
+    "Agent Customizations(Copilot · workspace)\nOverview\nPlugins\n1\nMCP Servers\nSkills\n1\nInstructions\nAgents\n1\nHooks\nTools\n24\nMigrations\nAgents\n\nConfigure the AI to adopt different personas tailored to specific development tasks. Each agent has its own instructions, tools, and behavior. Learn more about custom agents\n\nWorkspace\n1\nCustomizations stored as files in your project folder and shared with your team via version control.\nNew Agent\nplugin-agent\nAgent plugin discovery test fixture\nUser\n0\nCustomizations stored locally on your machine in a central location. Private to you and available across all projects.\nNew Agent\nNo user agents yet."
+  ],
+  "copilotPluginAgentCount": 1,
+  "copilotChatAfterReload": [
+    "Agent\nCtrl+Shift+I",
+    "plugin-agent",
+    "plugin-agent",
+    "Configure Custom Agents..."
+  ],
+  "localAgentsAfterReload": [
+    "Agent Customizations(Local · workspace)\nOverview\nPlugins\n1\nMCP Servers\nSkills\n13\nInstructions\nAgents\n5\nHooks\nPrompts\n7\nAgents\n\nConfigure the AI to adopt different personas tailored to specific development tasks. Each agent has its own instructions, tools, and behavior. Learn more about custom agents\n\nWorkspace\n1\nCustomizations stored as files in your project folder and shared with your team via version control.\nNew Agent\nGenerate with AI\nplugin-agent\nAgent plugin discovery test fixture\nUser\n0\nCustomizations stored locally on your machine in a central location. Private to you and available across all projects.\nNew Agent\nNo user agents yet.\nPlugins\n1\nRead-only customizations provided by installed plugins.\nplugin-agent\nAgent plugin discovery test fixture\nBuilt-in\n3\nBuilt-in customizations shipped with the application.\nAsk\nAnswers questions without making changes\nExplore\nFast read-only codebase exploration and Q&A subagent. Prefer over manually chaining multiple search and file-reading operations to avoid cluttering the main conversation. Safe to call in parallel. Specify thoroughness: quick, medium, or thorough.\nPlan\nResearches and outlines multi-step plans"
+  ],
+  "localPluginEditor": {
+    "className": "monaco-editor no-user-select  showUnused showDeprecated vs-dark focused",
+    "resourceUri": "file:///c%3A/Users/martinae/workspaces/agent-testing/agent-testing-2-20260917-084557/plugin-agent-discovery/workspace/tpi-agent-plugin/com.github.copilot/agents/plugin-agent.agent.md",
+    "textareas": [
+      {
+        "ariaReadOnly": null,
+        "readOnly": true
+      }
+    ],
+    "contentEditables": []
+  },
+  "cleanupToggleBefore": "true",
+  "cleanupToggleAfter": "false"
+}
